@@ -1,5 +1,6 @@
 package com.shop.repository;
 
+import com.shop.dto.ItemFormDto;
 import com.shop.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,6 @@ public interface ItemRepository extends JpaRepository<Item,Long>, QuerydslPredic
             "order by i.price desc", nativeQuery = true)
     List<Item> findByItemDetailByNative(@Param("itemDetail") String itemDetail);
 
+    @Query(value = "select * from Item i where i.item_recommend = true", nativeQuery = true)
+    List<ItemFormDto> findByItemIdByNative();
 }

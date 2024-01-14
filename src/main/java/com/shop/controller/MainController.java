@@ -13,29 +13,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 @Controller
 @RequiredArgsConstructor
 public class MainController {
     private final ItemService itemService;
     @GetMapping(value = "/")
-    public String main(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model, Principal principal, HttpSession httpSession) {
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 5);
-        if(itemSearchDto.getSearchQuery() == null)
-        {
-            itemSearchDto.setSearchQuery("");
-        }
-
-        if(principal != null){
-            System.out.println(httpSession.getAttribute("user").toString());
-        }
-
-        Page<MainItemDto> items = itemService.getMainItemPage(itemSearchDto, pageable);
-        System.out.println(items.getNumber()+"!!!!!!!!!!");
-        System.out.println(items.getTotalPages()+"#########");
+    public String main(Model model){
+        List<MainItemDto> items = itemService.getMainItemList();
         model.addAttribute("items", items);
-        model.addAttribute("itemSearchDto",itemSearchDto);
-        model.addAttribute("maxPage",5);
         return "main";
+    }
+
+    @GetMapping(value = "/about")
+    public String about(){
+        return "/others/about";
     }
 }

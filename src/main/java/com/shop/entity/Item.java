@@ -38,6 +38,9 @@ public class Item extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; // 상품 판매 상태
 
+    @Column(nullable = false)
+    private boolean itemRecommend; // 추천 상품 => 메인 진열
+
 //    private LocalDateTime regTime; // 등록 시간
 //
 //    private LocalDateTime updateTime; // 수정 시간
@@ -56,9 +59,9 @@ public class Item extends BaseEntity{
         this.stockNumber = itemFormDto.getStockNumber();
         this.itemDetail = itemFormDto.getItemDetail();
         this.itemSellStatus = itemFormDto.getItemSellStatus();
+        this.itemRecommend = itemFormDto.isItemRecommend();
     }
 
-    //경고에요 산수 경고 경고
     public void removeStock(int stockNumber){
         int restStock = this.stockNumber - stockNumber; // 10,  5 / 10, 20
         if(restStock<0){

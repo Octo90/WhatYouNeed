@@ -2,6 +2,7 @@ package com.shop.controller;
 
 import com.shop.dto.ItemFormDto;
 import com.shop.dto.ItemSearchDto;
+import com.shop.dto.MainItemDto;
 import com.shop.entity.Item;
 import com.shop.service.ItemService;
 import jakarta.persistence.EntityNotFoundException;
@@ -104,5 +105,21 @@ public class ItemController {
         model.addAttribute("item",itemFormDto);
         return "item/itemDtl";
     }
+
+    @GetMapping(value = "/list")
+    public String itemList(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model){
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 8);
+        if(itemSearchDto.getSearchQuery() == null){
+            itemSearchDto.setSearchQuery("");
+        }
+        Page<MainItemDto> items = itemService.getListItemPage(itemSearchDto, pageable);
+        System.out.println(items.getNumber()+"!!!!!!!!!");
+        System.out.println(items.getTotalPages()+"##########");
+        model.addAttribute("items", items);
+        model.addAttribute("itemSearchDto", itemSearchDto);
+        model.addAttribute("maxPage", 8);
+        return "item/itemList";
+    }
+
 
 }

@@ -72,18 +72,29 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         return StringUtils.isEmpty(searchQuery) ? null : QItem.item.itemNm.like("%"+searchQuery+"%");
     }
     @Override
-    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
+    public Page<MainItemDto> getListItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
         QItem item = QItem.item;
         QItemImg itemImg = QItemImg.itemImg;
-        //QMainItemDto @QueryProjection을 하용하면 DTO로 바로 조회 가능
-        QueryResults<MainItemDto> results = queryFactory.select(new QMainItemDto(item.id, item.itemNm,
-                        item.itemDetail,itemImg.imgUrl,item.price))
-                // join 내부조인 .repImgYn.eq("Y") 대표이미지만 가져온다.
+
+        QueryResults<MainItemDto> results = queryFactory.select(new QMainItemDto(item.id, item.itemNm, item.itemDetail, itemImg.imgUrl, item.price,item.itemRecommend))
                 .from(itemImg).join(itemImg.item, item).where(itemImg.repImgYn.eq("Y"))
                 .where(itemNmLike(itemSearchDto.getSearchQuery()))
                 .orderBy(item.id.desc()).offset(pageable.getOffset()).limit(pageable.getPageSize()).fetchResults();
         List<MainItemDto> content = results.getResults();
         long total = results.getTotal();
-        return new PageImpl<>(content, pageable,total);
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public List<MainItemDto> getMainItemList(){
+        QItem item = QItem.item;
+        QItemImg itemImg = QItemImg.itemImg;
+
+        QueryResults<MainItemDto> results = queryFactory.select(new QMainItemDto(item.id, item.itemNm, item.itemDetail, itemImg.imgUrl, item.price, item.itemRecommend))
+                .from(itemImg).join(itemImg.item, item).where(itemImg.repImgYn.eq("Y"))
+                .where(item.itemRecommend.eq(true))
+                .fetchResults();
+        List<MainItemDto> content = results.getResults();
+        return content;
     }
 }
