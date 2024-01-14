@@ -29,6 +29,8 @@ public class ItemFormDto {
     private Integer stockNumber;
 
     private ItemSellStatus itemSellStatus;
+
+    private boolean itemRecommend;
 //----------------------------------------------------------------------------
     //ItemImg
     private List<ItemImgDto> itemImgDtoList = new ArrayList<>(); //상품 이미지 정보

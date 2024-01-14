@@ -23,12 +23,25 @@ public class SecurityConfig {
     @Autowired
     private CustomOAuth2UserService customOAuth2UserService;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/",
+            "/css/**",
+            "/js/**",
+            "/img/**",
+            "/favicon.ico",
+            "/error",
+            "/members/**",
+            "/item/**",
+            "/about",
+            "/list",
+            "/images/**"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**","/img/**","/favicon.ico","/error").permitAll()
-                        .requestMatchers("/","/members/**","/item/**","/images/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers(AUTH_WHITELIST).permitAll() //AUTH_WHITELIST
+                        .requestMatchers("/admin/**", "/items/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin

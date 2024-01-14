@@ -13,6 +13,7 @@ public class ItemDto {
     private Integer price;
     private String itemDetail;
     private String sellStatCd;
+    private boolean itemRecomm;
     private LocalDateTime regTime;
     private LocalDateTime updateTime;
 }
