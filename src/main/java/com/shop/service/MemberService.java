@@ -2,6 +2,7 @@ package com.shop.service;
 
 import com.shop.entity.Member;
 import com.shop.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -16,25 +17,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor // final 또는 @NonNull 명령어가 붙으면 객체를 자동 붙혀줍니다.
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
-//    @Autowired
+    //    @Autowired
 //    MemberRepository memberRepository;
     public Member saveMember(Member member) {
-        validateDuplicateMember(member);
         return memberRepository.save(member); // 데이터베이스에 저장을 하라는 명령
     }
-    private void validateDuplicateMember(Member member) {
-        Member findMember = memberRepository.findByEmail(member.getEmail());
-        if (findMember != null) {
-            throw new IllegalStateException("이미 가입된 회원입니다.");
-        }
+    public void validateDuplicateMember(Member member) {
+        memberRepository.findByEmail(member.getEmail()).orElseThrow();
     }
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmail(email);
-
-        if(member == null){
-            throw new UsernameNotFoundException(email);
-        }
+        Member member = memberRepository.findByEmail(email).orElseThrow();
         //빌더패턴
         return User.builder().username(member.getEmail())
                 .password(member.getPassword())

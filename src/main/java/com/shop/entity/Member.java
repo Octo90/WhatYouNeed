@@ -31,6 +31,9 @@ public class Member extends BaseEntity{
     private String tel;
     @Enumerated(EnumType.STRING)
     private Role role;
+
+
+
     public static Member createMember(MemberFormDto memberFormDto,
                                       PasswordEncoder passwordEncoder){
         Member member = new Member();
@@ -42,5 +45,15 @@ public class Member extends BaseEntity{
         member.setPassword(password);
         member.setRole(Role.ADMIN);
         return member;
+    }
+    public Member() {
+    }
+    public Member(String name, String email){
+        this.name=name;
+        this.email=email;
+    }
+    public Member update(String name){
+        this.name=name;
+        return this;
     }
 }
