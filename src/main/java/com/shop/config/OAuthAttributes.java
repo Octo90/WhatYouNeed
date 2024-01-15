@@ -1,6 +1,6 @@
 package com.shop.config;
 
-import com.shop.entity.User;
+import com.shop.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -77,7 +77,7 @@ public class OAuthAttributes {
 
     // .. getter/setter 생략
 
-    public User toEntity() {
-        return new User(name, email, picture);
+    public Member toEntity(){
+        return new Member(name,email);
     }
 }

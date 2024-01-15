@@ -13,6 +13,7 @@ import com.shop.repository.CartRepository;
 import com.shop.repository.ItemRepository;
 import com.shop.repository.MemberRepository;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,6 @@ import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,66 +32,65 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final OrderService orderService;
 
-    public Long addCart(CartItemDto cartItemDto, String email){
+    public Long addCart(CartItemDto cartItemDto, String email) {
         Item item = itemRepository.findById(cartItemDto.getItemId())
-                .orElseThrow(EntityExistsException::new);
-        Member member = memberRepository.findByEmail(email);
+                .orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail(email).orElseThrow();
 
         Cart cart = cartRepository.findByMemberId(member.getId());
-        if(cart == null){
+        if (cart == null) {
             cart = Cart.createCart(member);
             cartRepository.save(cart);
         }
+        CartItem savedCartItem =
+                cartItemRepository.findByCartIdAndItemId(cart.getId(), item.getId());
 
-        CartItem savedCartItem = cartItemRepository.findByCartIdAndItemId(cart.getId(),item.getId());
-        if(savedCartItem != null){
+        if (savedCartItem != null) {
             savedCartItem.addCount(cartItemDto.getCount());
             return savedCartItem.getId();
-        }
-        else{
+        } else {
             CartItem cartItem = CartItem.createCartItem(cart, item, cartItemDto.getCount());
             cartItemRepository.save(cartItem);
             return cartItem.getId();
         }
     }
-
     @Transactional(readOnly = true)
     public List<CartDetailDto> getCartList(String email){
         List<CartDetailDto> cartDetailDtoList = new ArrayList<>();
 
-        Member member = memberRepository.findByEmail(email);
-
+        Member member = memberRepository.findByEmail(email).orElseThrow();
         Cart cart = cartRepository.findByMemberId(member.getId());
-        if(cart == null){
+        if (cart == null){
             return cartDetailDtoList;
         }
         cartDetailDtoList = cartItemRepository.findCartDetailDtoList(cart.getId());
         return cartDetailDtoList;
     }
-
     @Transactional(readOnly = true)
     public boolean validateCartItem(Long cartItemId, String email){
-        Member curMember = memberRepository.findByEmail(email);
+        Member curMember = memberRepository.findByEmail(email).orElseThrow();
         CartItem cartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(EntityExistsException::new);
+                .orElseThrow(EntityNotFoundException::new);
         Member savedMember = cartItem.getCart().getMember();
 
-        if(!StringUtils.equals(curMember.getEmail(),savedMember.getEmail())){
+        if(!StringUtils.equals(curMember.getEmail(), savedMember.getEmail())){
             return false;
         }
+
         return true;
     }
+
     public void updateCartItemCount(Long cartItemId, int count){
         CartItem cartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(EntityExistsException::new);
+                .orElseThrow(EntityNotFoundException::new);
+
         cartItem.updateCount(count);
     }
-
-    public void deleteCartItem(Long cartItemId){
-        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(EntityExistsException::new);
+    public void deleteCartItem(Long cartItemId) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(EntityNotFoundException::new);
         cartItemRepository.delete(cartItem);
     }
-
     public Long orderCartItem(List<CartOrderDto> cartOrderDtoList, String email){
         List<OrderDto> orderDtoList = new ArrayList<>();
         for(CartOrderDto cartOrderDto : cartOrderDtoList){
@@ -111,5 +110,4 @@ public class CartService {
         }
         return orderId;
     }
-
 }

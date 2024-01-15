@@ -2,16 +2,22 @@ package com.shop.controller;
 
 import com.shop.dto.MemberFormDto;
 import com.shop.entity.Member;
+import com.shop.service.HttpService;
 import com.shop.service.MemberService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.NoSuchElementException;
 
 @RequestMapping("/members")
 @Controller
@@ -32,14 +38,17 @@ public class MemberController {
         if(bindingResult.hasErrors()){
             return "member/memberForm";
         }
+        Member member = Member.createMember(memberFormDto, passwordEncoder);
+
         try {
-            Member member = Member.createMember(memberFormDto, passwordEncoder);
+            memberService.validateDuplicateMember(member);
+
+        }catch(NoSuchElementException e){
             memberService.saveMember(member);
-        }catch(IllegalStateException e){
-            model.addAttribute("errorMessage",e.getMessage());
-            return "member/memberForm";
+            return "redirect:/";
         }
-        return "redirect:/";
+        model.addAttribute("errorMessage","1");
+        return "member/memberForm";
     }
 
     @GetMapping(value = "/login")
