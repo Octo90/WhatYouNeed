@@ -6,12 +6,9 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
-<head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-          crossorigin="anonymous">
 
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
     <style>
         .table img {
             max-width: 100%;
@@ -24,31 +21,33 @@
             overflow-x: auto;
             margin-bottom: 15px;
         }
+
         .comment-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 15px;
-    }
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
 
-    /* 각 댓글에 대한 스타일 */
-    .comment {
-        background-color: #f2f2f2;
-    }
+        /* 각 댓글에 대한 스타일 */
+        .comment {
+            background-color: #f2f2f2;
+        }
 
-    /* 대댓글을 감싸는 테이블에 대한 스타일 */
-    .reply-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
+        /* 대댓글을 감싸는 테이블에 대한 스타일 */
+        .reply-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
 
-    /* 각 대댓글에 대한 스타일 */
-    .reply {
-        background-color: #e6e6e6;
-        margin-left: 20px;
-    }
+        /* 각 대댓글에 대한 스타일 */
+        .reply {
+            background-color: #e6e6e6;
+            margin-left: 20px;
+        }
     </style>
-</head>
+</th:block>
+
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         function showPasswordPopup() {
@@ -81,223 +80,259 @@
                 }
             });
         }
-    </script>
-    <script th:inline="javascript">
+
         function deletePasswordPopup() {
-                 document.getElementById('passwordPopup1').style.display = 'block';
-             }
-             function deleteBoardAndProceed() {
-              var token = $("meta[name='_csrf']").attr("content");
+            document.getElementById('passwordPopup1').style.display = 'block';
+        }
+
+        function deleteBoardAndProceed() {
+            var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
-                 var token = $("meta[name='_csrf']").attr("content");
-                 var header = $("meta[name='_csrf_header']").attr("content");
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var enteredPassword = document.getElementById('password1').value;
 
-                 var enteredPassword = document.getElementById('password1').value;
-
-
-                 $.ajax({
-                     type: 'POST',
-                      beforeSend : function(xhr){
-                        xhr.setRequestHeader(header, token);
-                        },
-                     url: '/board/checkPassword',
-                     data: { postId: /*[[${board.id}]]*/, password: enteredPassword },
-                     success: function (response) {
-                         if (response.success) {
-                            alert('게시글을 삭제하였습니다');
-                            var form = document.getElementById('deleteForm');
+            $.ajax({
+                type: 'POST',
+                beforeSend : function(xhr){
+                    xhr.setRequestHeader(header, token);
+                },
+                url: '/board/checkPassword',
+                data: { postId: /*[[${board.id}]]*/, password: enteredPassword },
+                success: function (response) {
+                    if (response.success) {
+                        alert('게시글을 삭제하였습니다');
+                        var form = document.getElementById('deleteForm');
                         form.submit();
-                         } else {
-                             alert('비밀번호가 일치하지 않습니다.');
-                         }
-                     },
-                     error: function (error) {
-                         console.error('비밀번호 확인 실패:', error);
-                     }
-                 });
-             }
-    </script>
-    <script th:inline="javascript">
+                    } else {
+                        alert('비밀번호가 일치하지 않습니다.');
+                    }
+                },
+                error: function (error) {
+                    console.error('비밀번호 확인 실패:', error);
+                }
+            });
+        }
+
         window.onload = function () {
-    loadComments();
-};
+            loadComments();
+        };
 
-function loadComments() {
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-    const id = [[${board.id}]];
+        function loadComments() {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            const id = [[${board.id}]];
 
-    // Ajax 요청
-    $.ajax({
-        type: "get",
-        beforeSend: function(xhr){
-            xhr.setRequestHeader(header, token);
-        },
-        url: "/comment/getByBoardId/" + id,
-        success: function (res) {
-            console.log("댓글 목록 가져오기 성공", res);
+            // Ajax 요청
+            $.ajax({
+                type: "get",
+                beforeSend: function(xhr){
+                    xhr.setRequestHeader(header, token);
+                },
+                url: "/comment/getByBoardId/" + id,
+                success: function (res) {
+                    console.log("댓글 목록 가져오기 성공", res);
+                    console.log(res.length);
 
-            // 결과를 처리
-            const commentListContainer = document.getElementById('comment-list');
-            if (commentListContainer) {
-                const output = generateCommentTable(res);
-                commentListContainer.innerHTML = output;
-            } else {
-                console.error("comment-list 엘리먼트를 찾을 수 없습니다.");
-            }
-        },
-        error: function (err) {
-            console.error("댓글 목록 가져오기 실패", err);
-        }
-    });
-}
+                    let html = "";
+                    if( res.length > 0){
+                        for(let i=0; i < res.length; i++){
+                            html += "<li class='comment' data-target=" + res[i].id + ">";
+                            html += "   <div class='comment-box'>";
+                            html += "       <div class='writer'>" + res[i].commentWriter + "</div>";
+                            html += "       <div class='contents'>" + res[i].commentContents + "</div>";
+                            html += "       <div class='reg-date'>" + res[i].commentCreatedTime + "</div>";
+                            //html += "       <button onclick='showReplyForm(" + res[i].id + ")'>답글</button>";
+                            html += "       <button class='reply-btn'>답글</button>";
+                            html += "   </div>"
+                            html += "</li>"
+                        }
+                    } else {
+                        html += "<p> 등록된 댓글이 없습니다! </p>";
+                    }
 
-
-
-       const commentWrite = () => {
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-
-    const writer = document.getElementById("commentWriter").value;
-    const contents = document.getElementById("commentContents").value;
-    const id = [[${board.id}]];
-
-    // Ajax 요청
-    $.ajax({
-        type: "post",
-        beforeSend: function(xhr){
-            xhr.setRequestHeader(header, token);
-        },
-        url: "/comment/save",
-        data: {
-            "commentWriter": writer,
-            "commentContents": contents,
-            "boardId": id
-        },
-        success: function (res) {
-            console.log("요청성공", res);
-
-            // 결과를 처리
-            const commentListContainer = document.getElementById('comment-list');
-            if (commentListContainer) {
-                const output = generateCommentTable(res);
-                commentListContainer.innerHTML = output;
-                document.getElementById('commentWriter').value = '';
-                document.getElementById('commentContents').value = '';
-            } else {
-                console.error("comment-list 엘리먼트를 찾을 수 없습니다.");
-            }
-        },
-        error: function (err) {
-            console.error("요청실패", err);
-        }
-    });
-}
-function generateCommentTable(comments) {
-    let output = "<table>";
-    output += "<tr><th>댓글번호</th>";
-    output += "<th>작성자</th>";
-    output += "<th>내용</th>";
-    output += "<th>작성시간</th>";
-    output += "<th>답글</th></tr>";
-
-    for (let i in comments) {
-        output += "<tr>";
-        output += "<td>" + comments[i].id + "</td>";
-        output += "<td>" + comments[i].commentWriter + "</td>";
-        output += "<td>" + comments[i].commentContents + "</td>";
-        output += "<td>" + comments[i].commentCreatedTime + "</td>";
-        output += "<td><button onclick='showReplyForm(" + comments[i].id + ")'>답글</button></td>";
-        output += "</tr>";
-
-        // 대댓글 폼 추가
-        output += "<tr>";
-        output += "<td>";
-        output += "<div id='replyForm-" + comments[i].id + "' style='display: none;'>";
-        output += "<input type='text' id='replyWriter-" + comments[i].id + "' placeholder='작성자명'>";
-        output += "<input type='text' id='replyContents-" + comments[i].id + "' placeholder='답글 내용'>";
-        output += "<button onclick='submitReply(" + comments[i].id + ")'>답글 전송</button>";
-        output += "</div>";
-        output += "</td>";
-        output += "</tr>";
-    }
-
-    output += "</table>";
-
-    return output; // 함수에서 생성한 HTML을 반환
-}
-               const listReq = () => {
-                   console.log("목록 요청");
-                   const page = [[${page}]];
-                   location.href = "/board/paging?page="+page;
-               }
-               const updateReq = () => {
-                   console.log("수정 요청");
-                   const id = [[${board.id}]];
-                   location.href = "/board/update/" + id;
-               }
-               const deleteReq = () => {
-                   console.log("삭제 요청");
-                   const id = [[${board.id}]];
-                   location.href = "/board/delete/" + id;
-               }
-
-        function showReplyForm(commentId) {
-            const replyForm = document.getElementById(`replyForm-${commentId}`);
-            if (replyForm) {
-                replyForm.style.display = 'block';
-            }
+                    $("#comment-list").html(html);
+                },
+                error: function (err) {
+                    console.error("댓글 목록 가져오기 실패", err);
+                }
+            });
         }
 
-function submitReply(parentCommentId) {
-    var token = $("meta[name='_csrf']").attr("content");
-     var header = $("meta[name='_csrf_header']").attr("content");
-    const writer = document.getElementById(`replyWriter-${parentCommentId}`).value;
-    const contents = document.getElementById(`replyContents-${parentCommentId}`).value;
-    const boardId = [[${board.id}]];
+        function commentWrite() {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
 
-    // 백엔드에 대댓글 제출을 위한 AJAX 요청 보내기
-    $.ajax({
-        type: "post",
-        contentType: "application/json",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader(header, token);
-        },
-        url: "/comment/saveReply/" + parentCommentId,
-        dataType: "JSON",
-       data: JSON.stringify({
-           "commentWriter": writer,
-           "commentContents": contents,
-           "boardId": boardId
-        }),
-        success: function (res) {
-            console.log("대댓글 제출 성공", res);
+            const writer = document.getElementById("commentWriter").value;
+            const contents = document.getElementById("commentContents").value;
+            const id = [[${board.id}]];
 
-            // 성공적인 제출 이후에 UI를 업데이트하여 새로운 대댓글을 표시
-            const commentListContainer = document.getElementById('comment-list');
-            if (commentListContainer) {
-                loadComments(); // 댓글 목록을 다시로드하거나 업데이트
-            } else {
-                console.error("comment-list 엘리먼트를 찾을 수 없습니다.");
-            }
-        },
-        error: function (err) {
-            console.error("대댓글 제출 실패", err);
+            // Ajax 요청
+            $.ajax({
+                type: "post",
+                beforeSend: function(xhr){
+                    xhr.setRequestHeader(header, token);
+                },
+                url: "/comment/save",
+                data: {
+                    "commentWriter": writer,
+                    "commentContents": contents,
+                    "boardId": id
+                },
+                success: function (res) {
+                    console.log("요청성공", res);
+
+                    let html = "";
+                    for(let i=0; i < res.length; i++){
+                        html += "<li class='comment' data-target=" + res[i].id + ">";
+                        html += "   <div class='comment-box'>";
+                        html += "       <div class='writer'>" + res[i].commentWriter + "</div>";
+                        html += "       <div class='contents'>" + res[i].commentContents + "</div>";
+                        html += "       <div class='reg-date'>" + res[i].commentCreatedTime + "</div>";
+                        //html += "       <button onclick='showReplyForm(" + res[i].id + ")'>답글</button>";
+                        html += "       <button class='reply-btn'>답글</button>";
+                        html += "   </div>"
+                        html += "</li>"
+                    }
+
+                    $("#commentWriter, #commentContents").val("");
+                    $("#comment-list").html(html);
+                },
+                error: function (err) {
+                    console.error("요청실패", err);
+                }
+            });
         }
-    });
-}
 
-   function showReplyForm(commentId) {
-   console.log(`showReplyForm called for commentId: ${commentId}`);
-    const replyForm = document.getElementById(`replyForm-${commentId}`);
-    if (replyForm) {
-        replyForm.style.display = 'block';
-    }
-}
+        const listReq = () => {
+           console.log("목록 요청");
+           const page = [[${page}]];
+           location.href = "/board/paging?page="+page;
+        }
+
+        const updateReq = () => {
+           console.log("수정 요청");
+           const id = [[${board.id}]];
+           location.href = "/board/update/" + id;
+        }
+
+        const deleteReq = () => {
+           console.log("삭제 요청");
+           const id = [[${board.id}]];
+           location.href = "/board/delete/" + id;
+        }
+
+        $(document).on("click", ".reply-btn", function(){
+            const _ths = $(this);
+            const dataTarget = _ths.parents(".comment").attr("data-target");
+            console.log(dataTarget);
+
+            let html = "";
+            html += "<div class='comment-reply-input'>"
+            html += "   <input type='text' id='replyWriter-" + dataTarget + "' placeholder='작성자명'>";
+            html += "   <input type='text' id='replyContents-" + dataTarget + "' placeholder='답글 내용'>";
+            html += "   <button class='reply-reply-btn'>답글 전송</button>";
+            html += "</div>"
+
+            _ths.parents(".comment-box").after(html);
+        });
+
+        $(document).on("click", ".reply-reply-btn", function(){
+            const _ths = $(this);
+            const dataTarget = _ths.parents(".comment").attr("data-target");
+
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            const writer = document.getElementById("replyWriter-" + dataTarget).value;
+            const contents = document.getElementById("replyContents-" + dataTarget).value;
+            const boardId = [[${board.id}]];
+
+            console.log(dataTarget);
+
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                url: "/comment/saveReply/" + dataTarget,
+                dataType: "JSON",
+                data: JSON.stringify({
+                   "commentWriter": writer,
+                   "commentContents": contents,
+                   "boardId": boardId
+                }),
+                success: function (res) {
+                    console.log("대댓글 제출 성공", res);
+
+                    let html = "";
+                    html += "<div class='comment-reply-box' data-parentTarget='" + dataTarget + "' data-target='" + res + "'>";
+                    html += "   <div class='writer'>⌊ " + writer + "</div>";
+                    html += "   <div class='contents'>" + contents + "</div>";
+                    //html += "   <div class='reg-date'>" +  + "</div>";
+                    html += "</div>"
+
+                     $(".comment-reply-input").hide();
+                    _ths.parent().siblings(".comment-box").after(html);
+
+                },
+                error: function (err) {
+                    console.error("대댓글 제출 실패", err);
+                }
+            });
+        });
+
+/*
+        function submitReply(parentCommentId) {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            const writer = document.getElementById(`replyWriter-${parentCommentId}`).value;
+            const contents = document.getElementById(`replyContents-${parentCommentId}`).value;
+            const boardId = [[${board.id}]];
+
+            // 백엔드에 대댓글 제출을 위한 AJAX 요청 보내기
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                url: "/comment/saveReply/" + parentCommentId,
+                dataType: "JSON",
+                data: JSON.stringify({
+                   "commentWriter": writer,
+                   "commentContents": contents,
+                   "boardId": boardId
+                }),
+                success: function (res) {
+                    console.log("대댓글 제출 성공", res);
+
+                    let html = "";
+
+                    //for(let i=0; i < res.length; i++){
+                        html += "<div class='comment-reply-box' data-target='" + res + "'>";
+                        html += "   <div class='writer'>⌊ " + writer + "</div>";
+                        html += "   <div class='contents'>" + contents + "</div>";
+                        //html += "   <div class='reg-date'>" +  + "</div>";
+                        html += "</div>"
+                    //}
+
+                    $(".comment-reply-input").hide();
+                    $("#comment-list li .comment-box").after(html);
+
+                },
+                error: function (err) {
+                    console.error("대댓글 제출 실패", err);
+                }
+            });
+        }
+*/
+
     </script>
 </th:block>
-<body>
-<div layout:fragment="content" class="content-mg">
+
+<div layout:fragment="content">
+
     <h1>게시판 상세 페이지</h1>
 
     <div class="table-container">
@@ -337,6 +372,7 @@ function submitReply(parentCommentId) {
         </div>
     </form>
     </p>
+
     <!-- 댓글 작성 부분 -->
     <div id="comment-write">
         <input type="text" id="commentWriter" placeholder="작성자">
@@ -344,54 +380,38 @@ function submitReply(parentCommentId) {
         <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
     </div>
 
-    <!-- 댓글 출력 부분 -->
-    <div id="comment-list" class="comment-table">
-        <table>
-            <tr>
-                <th>댓글번호</th>
-                <th>작성자</th>
-                <th>내용</th>
-                <th>작성시간</th>
-            </tr>
+    <div class="comment-table">
+        <ul id="comment-list">
 
-            <tr th:each="comment: ${commentList}" class="comment">
-                <td th:text="${comment.id}"></td>
-                <td th:text="${comment.commentWriter}"></td>
-                <td th:text="${comment.commentContents}"></td>
-                <td>
-                    <span th:text="${#dates.format(comment.commentCreatedTime, 'yyyy-MM-dd')}"></span>
-                </td>
-                <td>
-                    <button onclick="showReplyForm(${comment.id})">답글</button>
-                    <div id="replyForm-${comment.id}" style="display: none;">
-                        <input type="text" id="replyWriter-${comment.id}" placeholder="작성자명">
-                        <input type="text" id="replyContents-${comment.id}" placeholder="답글 내용">
-                        <button onclick="submitReply(${comment.id})">답글 전송</button>
-                    </div>
-
-                    <!-- 대댓글 표시 -->
-                    <table class="reply-table">
-                        <tr th:each="reply: ${comment.replies}" class="reply">
-                            <td th:text="${reply.id}"></td>
-                            <td th:text="${reply.commentWriter}"></td>
-                            <td th:text="${reply.commentContents}"></td>
-                            <td>
-                                <span th:text="${#dates.format(reply.commentCreatedTime, 'yyyy-MM-dd')}"></span>
-                            </td>
-                        </tr>
-                    </table>
-                    <div>
-                        <input type="text" id="commentWriter-${comment.id}" placeholder="작성자">
-                        <input type="text" id="commentContents-${comment.id}" placeholder="내용">
-                        <button onclick="submitReply(${comment.id})">댓글 작성</button>
-                    </div>
-                </td>
-            </tr>
-        </table>
+            <!--           <li class="comment" th:attr="data-target=${comment.id}"> 댓글아이디-->
+            <!--               <div class="comment-box">-->
+            <!--                   <td th:text="${comment.id}"></td>-->
+            <!--                   <div class="writer" th:text="${comment.commentWriter}"></div>-->
+            <!--                   <div class="contents" th:text="${comment.commentContents}"></div>-->
+            <!--                   <div class="reg-date" th:text="${#dates.format(comment.commentCreatedTime, 'yyyy-MM-dd')}"></div>-->
+            <!--                   <button onclick="showReplyForm(${comment.id})">답글</button>-->
+            <!--               </div>-->
+            <!--               <div class="comment-reply-box">-->
+            <!--                   <input type="text" id="replyWriter-${comment.id}" placeholder="작성자명">-->
+            <!--                   <input type="text" id="replyContents-${comment.id}" placeholder="답글 내용">-->
+            <!--                   <button onclick="submitReply(${comment.id})">답글 전송</button>-->
+            <!--               </div>-->
+            <!--               <div class="comment-reply-reply-box">-->
+            <!--                   <div class="writer" th:text="${comment.commentWriter}"></div>-->
+            <!--                   <div class="contents" th:text="${comment.commentContents}"></div>-->
+            <!--                   <div class="reg-date" th:text="${#dates.format(comment.commentCreatedTime, 'yyyy-MM-dd')}"></div>-->
+            <!--               </div>-->
+            <!--           </li>-->
+        </ul>
     </div>
+
+    <!--        <button onclick="showReplyForm(${comment.id})">답글</button>-->
+    <!--        <div id="replyForm-${comment.id}" style="display: none;">-->
+    <!--            <input type="text" id="replyWriter-${comment.id}" placeholder="작성자명">-->
+    <!--            <input type="text" id="replyContents-${comment.id}" placeholder="답글 내용">-->
+    <!--            <button onclick="submitReply(${comment.id})">답글 전송</button>-->
+    <!--        </div>-->
+
 </div>
 
-
-<div class="footer" th:fragment="content"></div>
-</body>
 </html>

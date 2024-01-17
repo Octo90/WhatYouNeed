@@ -278,8 +278,18 @@ ul {
     transform: scale(1);
 }
 
-.page-container .feed-list-wrap .feed-img-wrap img {
+.page-container .feed-list-wrap .feed-img-wrap {
+    position:relative;
+    padding-top: 100%;
     width: 100%;
+}
+
+.page-container .feed-list-wrap .feed-img-wrap img {
+    position:absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
@@ -291,6 +301,7 @@ ul {
     padding-bottom: 8px;
     margin-bottom: 12px;
     border-bottom: 1px solid #ddd;
+    min-height: 44.7px;
 }
 
 .page-container .feed-list-wrap .feed-exp-wrap .exp-top span {
@@ -308,6 +319,7 @@ ul {
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
     overflow: hidden;
+    height: 43px;
 }
 
 .page-container .feed-list-wrap .go-to-board {

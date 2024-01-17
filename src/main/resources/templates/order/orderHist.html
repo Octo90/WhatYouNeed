@@ -8,6 +8,10 @@
 </head>
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        $(function(){
+            $('.nav-wrap, .content').addClass('sub');
+        });
+
         function cancelOrder(orderId){
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
@@ -78,8 +82,8 @@
     </style>
 </th:block>
 
-<div layout:fragment="content" class="content-mg">
-    <h2 class="mb-4">구매 이력</h2>
+<div layout:fragment="content">
+    <h2 class="content-title">구매 이력</h2>
     <div th:each="order : ${orders.getContent()}">
         <div class="d-flex mb-3 align-self-center">
             <h4 th:text="${order.orderDate} + '주문'"></h4>
