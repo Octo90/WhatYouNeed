@@ -1,7 +1,10 @@
 package com.shop.controller;
 
+import com.shop.dto.BoardDto;
 import com.shop.dto.ItemSearchDto;
 import com.shop.dto.MainItemDto;
+import com.shop.entity.Board;
+import com.shop.service.BoardService;
 import com.shop.service.ItemService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +22,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MainController {
     private final ItemService itemService;
+    private final BoardService boardService;
     @GetMapping(value = "/")
     public String main(Model model){
         List<MainItemDto> items = itemService.getMainItemList();
+        List<Board> boardlist = boardService.getMainBoardList();
         model.addAttribute("items", items);
+        model.addAttribute("boardlist", boardlist);
         return "main";
     }
 
