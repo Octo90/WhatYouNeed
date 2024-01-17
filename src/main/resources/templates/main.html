@@ -79,128 +79,30 @@
                 <h2 class="list-title">#오늘의 오운완</h2>
                 <div class="board-slide swiper-container">
                     <ul class="swiper-wrapper list">
-                        <li class="swiper-slide list-item">
-                            <a href="/list" class="text-dark">
-                                <div class="feed-img-wrap">
-                                    <img th:src="@{/img/feed-img.jpg}">
-                                </div>
-                                <div class="feed-exp-wrap">
-                                    <div class="exp-top">
-                                        <span class="writer-name">채소소송송쏭</span>
-                                        <span class="writer-reg-date">2023.09.05</span>
+                        <th:block th:each="board: ${boardlist}">
+                            <li class="swiper-slide list-item">
+                                <a th:href="@{'/board/view?id=' + ${board.id}}" class="text-dark">
+                                    <div class="feed-img-wrap">
+                                        <img th:if="${not #strings.isEmpty(board.imgUrl)}"
+                                             th:src="${board.imgUrl}" class="rounded mgb-15" width="800" height="auto">
                                     </div>
-                                    <div class="exp-cont">
-                                        <p class="writer-content">오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~
-                                            오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~</p>
+                                    <div class="feed-exp-wrap">
+                                        <div class="exp-top">
+                                            <span class="writer-name" th:text="${board.name}"></span>
+
+                                            <span class="writer-reg-date" th:text="${#temporals.format(board.regTime, 'yyyy-MM-dd')}"></span>
+                                        </div>
+                                        <div class="exp-cont">
+                                            <p class="writer-content" th:text="${board.content}"></p>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="swiper-slide list-item">
-                            <a href="/list" class="text-dark">
-                                <div class="feed-img-wrap">
-                                    <img th:src="@{/img/feed-img.jpg}">
-                                </div>
-                                <div class="feed-exp-wrap">
-                                    <div class="exp-top">
-                                        <span class="writer-name">사이다숑</span>
-                                        <span class="writer-reg-date">2023.09.05</span>
-                                    </div>
-                                    <div class="exp-cont">
-                                        <p class="writer-content">오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~
-                                            오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="swiper-slide list-item">
-                            <a href="/list" class="text-dark">
-                                <div class="feed-img-wrap">
-                                    <img th:src="@{/img/feed-img.jpg}">
-                                </div>
-                                <div class="feed-exp-wrap">
-                                    <div class="exp-top">
-                                        <span class="writer-name">뇸뇸</span>
-                                        <span class="writer-reg-date">2023.09.05</span>
-                                    </div>
-                                    <div class="exp-cont">
-                                        <p class="writer-content">오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~
-                                            오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="swiper-slide list-item">
-                            <a href="/list" class="text-dark">
-                                <div class="feed-img-wrap">
-                                    <img th:src="@{/img/feed-img.jpg}">
-                                </div>
-                                <div class="feed-exp-wrap">
-                                    <div class="exp-top">
-                                        <span class="writer-name">냠냠</span>
-                                        <span class="writer-reg-date">2023.09.05</span>
-                                    </div>
-                                    <div class="exp-cont">
-                                        <p class="writer-content">오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~
-                                            오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="swiper-slide list-item">
-                            <a href="/list" class="text-dark">
-                                <div class="feed-img-wrap">
-                                    <img th:src="@{/img/feed-img.jpg}">
-                                </div>
-                                <div class="feed-exp-wrap">
-                                    <div class="exp-top">
-                                        <span class="writer-name">듕듕</span>
-                                        <span class="writer-reg-date">2023.09.05</span>
-                                    </div>
-                                    <div class="exp-cont">
-                                        <p class="writer-content">오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~
-                                            오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="swiper-slide list-item">
-                            <a href="/list" class="text-dark">
-                                <div class="feed-img-wrap">
-                                    <img th:src="@{/img/feed-img.jpg}">
-                                </div>
-                                <div class="feed-exp-wrap">
-                                    <div class="exp-top">
-                                        <span class="writer-name">휘리릭</span>
-                                        <span class="writer-reg-date">2023.09.05</span>
-                                    </div>
-                                    <div class="exp-cont">
-                                        <p class="writer-content">오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~
-                                            오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="swiper-slide list-item">
-                            <a href="/list" class="text-dark">
-                                <div class="feed-img-wrap">
-                                    <img th:src="@{/img/feed-img.jpg}">
-                                </div>
-                                <div class="feed-exp-wrap">
-                                    <div class="exp-top">
-                                        <span class="writer-name">비건쓰</span>
-                                        <span class="writer-reg-date">2023.09.05</span>
-                                    </div>
-                                    <div class="exp-cont">
-                                        <p class="writer-content">오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~
-                                            오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~ 오늘은 여유로움을 느끼며 명상과 함께 요가를~</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
+                                </a>
+                            </li>
+                        </th:block>
                     </ul>
                 </div>
-                <a href="/list" class="go-to-board">지금 바로 쓰러가야지! 🏃‍♂️</a>
+
+                <a href="/board" class="go-to-board">지금 바로 쓰러가야지! 🏃‍♂️</a>
             </div>
         </section>
     </div>
