@@ -255,10 +255,18 @@
             text-align: center;
         }
 
+        .cont-title {
+            margin: 20px auto 60px;
+            color: #999;
+        }
+
+        .text-center img {
+            width: 30%;
+        }
     </style>
 </th:block>
 
-<div layout:fragment="content" style="margin-left:25%;margin-right:25%;">
+<div layout:fragment="content">
     <input type="hidden" id="itemId" th:value="${item.id}">
 
     <div class="d-flex">
@@ -310,24 +318,32 @@
                 <h3 name="totalPrice" id="totalPrice"></h3>
             </div>
 
-            <div th:if="${item.itemSellStatus == T(com.WhatYouNeed.constant.ItemSellStatus).SELL}" class="btn-groups">
+            <div th:if="${item.itemSellStatus == T(com.shop.constant.ItemSellStatus).SELL}" class="btn-groups">
                 <button type="button" class="btn-comm btn-cart" onclick="addCart()">장바구니 담기</button>
                 <button type="button" class="btn-comm btn-order" onclick="order()">주문하기</button>
             </div>
 
-            <div th:unless="${item.itemSellStatus == T(com.WhatYouNeed.constant.ItemSellStatus).SELL}" class="btn-groups-not">
+            <div th:unless="${item.itemSellStatus == T(com.shop.constant.ItemSellStatus).SELL}" class="btn-groups-not">
                 <button type="button" class="btn-comm">품절</button>
             </div>
         </div>
     </div>
 
     <div class="item-detail-container">
+        <div class="cont-title">상품 상세 설명</div>
         <p class="lead" th:text="${item.itemDetail}"></p>
     </div>
 
     <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
         <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800" alt="">
     </div>
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
 
 </div>
 

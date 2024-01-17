@@ -13,6 +13,8 @@
             $("input[name=cartChkBox]").change(function(){
                 getOrderTotalPrice();
             });
+
+            $('.nav-wrap, .content').addClass('sub');
         });
 
         function getOrderTotalPrice(){
@@ -183,8 +185,8 @@
     </style>
 </th:block>
 
-<div layout:fragment="content" class="content-mg">
-    <h2 class="mb-4">장바구니 목록</h2>
+<div layout:fragment="content">
+    <h2 class="content-title">장바구니</h2>
     <div>
         <table class="table">
             <colgroup>
