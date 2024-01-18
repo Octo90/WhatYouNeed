@@ -84,8 +84,8 @@
             <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
 
             <div class="btns mt-3 text-center">
-                <button class="btn btn-primary">로그인</button>
-                <button type="button" class="btn btn-outline-primary" onclick="location.href='/members/new'">회원가입</button>
+                <button class="btn-save">로그인</button>
+                <button type="button" class="btn-other" onclick="location.href='/members/new'">회원가입</button>
             </div>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
         </form>

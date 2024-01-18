@@ -6,38 +6,70 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
-<th:block layout:fragment="script">
-    <script th:inline="javascript">
-        $(function(){
-            $('.nav-wrap, .content').addClass('sub');
-        });
-    </script>
-</th:block>
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
-        .table img {
-            max-width: 100%;
-            max-height: 400px;
-            height: auto;
+        .table-container {
+
         }
 
-        .table-container {
-            max-width: 800px;
-            overflow-x: auto;
+        .table-container dl {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            grid-gap: 0 50px;
+            margin-bottom: 50px;
+        }
+
+        .table-container dt {
+            position: relative;
+            padding-top: 100%;
+            width: 100%;
+        }
+
+        .table-container dt img {
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .table-container dd .user {
+            background-repeat: no-repeat;
+            background-size: 24px;
+            padding-left: 33px;
+        }
+
+        .table-container dd h2 {
+            padding-bottom: 28px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        p {
+            color: #555;
             margin-bottom: 15px;
         }
 
         .comment-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
+            margin: 40px auto;
+        }
+
+        .comment-table p {
+            text-align:center;
         }
 
         /* 각 댓글에 대한 스타일 */
         .comment {
             background-color: #f2f2f2;
+        }
+
+        .comment-box {
+            position: relative;
+            padding-bottom: 30px;
         }
 
         /* 대댓글을 감싸는 테이블에 대한 스타일 */
@@ -53,47 +85,10 @@
             margin-left: 20px;
         }
 
-            body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f8f8;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .table-container {
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .table img {
-            max-width: 100%;
-            max-height: 400px;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        p {
-            color: #555;
-            margin-bottom: 15px;
-        }
-
         button {
             background-color: #EF4040;
             color: #fff;
-            padding: 10px 15px;
+            padding: 9px 15px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -107,12 +102,26 @@
             margin-top: 20px;
         }
 
+         #comment-write h3 {
+            margin-bottom: 20px;
+            font-weight: bold;
+         }
+
+         #comment-write h3 span {
+            margin-left: 8px;
+            color: #EF4040;
+         }
+
         #comment-write input {
             width: 150px;
             padding: 8px;
             margin-right: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
+        }
+
+        #comment-write #commentContents {
+            width: calc(100% - 267px);
         }
 
         #comment-write-btn {
@@ -123,86 +132,89 @@
             background-color: #218838;
         }
 
-        .comment-table {
-            margin-top: 20px;
-        }
-
         .comment {
             background-color: #f2f2f2;
             border-radius: 8px;
             margin-bottom: 15px;
-            padding: 10px;
-        }
-
-        .comment-box {
-            margin-bottom: 10px;
+            padding: 16px;
         }
 
         .writer {
+            display: inline-block;
+            float: left;
+            margin-right: 8px;
             font-weight: bold;
             margin-bottom: 5px;
-        }
-
-        .contents {
-            margin-bottom: 5px;
+            padding-left: 50px;
+            background-size: 36px;
+            background-repeat: no-repeat;
+            height: 36px;
         }
 
         .reg-date {
+            float: right;
+            clear: both;
             font-size: 12px;
             color: #888;
         }
 
         .reply-btn {
-            background-color: #17a2b8;
-            color: #fff;
-            padding: 5px 10px;
+            position: absolute;
+            left: 50px;
+            top: 30px;
             border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
+            background:none;
+            padding: 0;
+        }
+
+        .reply-btn img {
+            width: 24px;
         }
 
         .reply-btn:hover {
-            background-color: #138496;
+            background:none;
         }
 
         .comment-reply-input {
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
         .comment-reply-input input {
             width: 100px;
-            padding: 5px;
+            padding: 5px 8px;
             margin-right: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
 
-        .comment-reply-btn {
-            background-color: #28a745;
-            color: #fff;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
+        .comment-reply-input input:nth-child(2) {
+            width: calc(100% - 210px);
         }
 
-        .comment-reply-btn:hover {
-            background-color: #218838;
+        .reply-reply-btn {
+            padding: 6px 15px;
         }
 
         .comment-reply-box {
             background-color: #e6e6e6;
             border-radius: 8px;
             padding: 10px;
-            margin-left: 20px;
-            margin-bottom: 10px;
+            margin: 10px 0 10px 20px;
         }
+
+        .comment-reply-box .writer {
+            padding-left: 6px;
+        }
+
+        .comment-reply-box .writer img {
+            width: 24px;
+            margin: 0 4px;
+        }
+
         /* 수정 및 삭제 버튼 스타일 */
         .edit-buttons {
             position: fixed;
-            bottom: 20px;
+            bottom: 86px;
             right: 20px;
             display: flex;
             flex-direction: column;
@@ -212,11 +224,19 @@
         .edit-buttons button {
             margin-top: 10px;
         }
+
+        .rightMenuWrap {
+            display: none !important;
+        }
     </style>
 </th:block>
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        $(function(){
+            $('.nav-wrap, .content').addClass('sub');
+        });
+
         function showPasswordPopup() {
             document.getElementById('passwordPopup').style.display = 'block';
         }
@@ -306,11 +326,11 @@
                         for(let i=0; i < res.length; i++){
                             html += "<li class='comment' data-target=" + res[i].id + ">";
                             html += "   <div class='comment-box'>";
-                            html += "       <div class='writer'>" + res[i].commentWriter + "</div>";
+                            html += "       <div class='writer' style='background-image: url(/img/user.png)'>" + res[i].commentWriter + "</div>";
                             html += "       <div class='contents'>" + res[i].commentContents + "</div>";
                             html += "       <div class='reg-date'>" + res[i].commentCreatedTime + "</div>";
                             //html += "       <button onclick='showReplyForm(" + res[i].id + ")'>답글</button>";
-                            html += "       <button class='reply-btn'>답글</button>";
+                            html += "       <button class='reply-btn'><img src='/img/chat-balloon.png'></button>";
                             html += "   </div>"
                             html += "</li>"
                         }
@@ -318,6 +338,7 @@
                         html += "<p> 등록된 댓글이 없습니다! </p>";
                     }
 
+                    $("#comment-count").text(res.length);
                     $("#comment-list").html(html);
                 },
                 error: function (err) {
@@ -353,15 +374,16 @@
                     for(let i=0; i < res.length; i++){
                         html += "<li class='comment' data-target=" + res[i].id + ">";
                         html += "   <div class='comment-box'>";
-                        html += "       <div class='writer'>" + res[i].commentWriter + "</div>";
+                        html += "       <div class='writer' style='background-image: url(/img/user.png)'>" + res[i].commentWriter + "</div>";
                         html += "       <div class='contents'>" + res[i].commentContents + "</div>";
                         html += "       <div class='reg-date'>" + res[i].commentCreatedTime + "</div>";
                         //html += "       <button onclick='showReplyForm(" + res[i].id + ")'>답글</button>";
-                        html += "       <button class='reply-btn'>답글</button>";
+                        html += "       <button class='reply-btn'><img src='/img/chat-balloon.png'></button>";
                         html += "   </div>"
                         html += "</li>"
                     }
 
+                    $("#comment-count").text(res.length);
                     $("#commentWriter, #commentContents").val("");
                     $("#comment-list").html(html);
                 },
@@ -370,8 +392,6 @@
                 }
             });
         }
-
-
 
         $(document).on("click", ".reply-btn", function(){
             const _ths = $(this);
@@ -418,7 +438,7 @@
 
                     let html = "";
                     html += "<div class='comment-reply-box' data-parentTarget='" + dataTarget + "' data-target='" + res + "'>";
-                    html += "   <div class='writer'>⤷ " + writer + "</div>";
+                    html += "   <div class='writer'>⤷ <img src='/img/user.png' />" + writer + "</div>";
                     html += "   <div class='contents'>" + contents + "</div>";
                     //html += "   <div class='reg-date'>" +  + "</div>";
                     html += "</div>"
@@ -433,73 +453,23 @@
             });
         });
 
-/*
-        function submitReply(parentCommentId) {
-            var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
-            const writer = document.getElementById(`replyWriter-${parentCommentId}`).value;
-            const contents = document.getElementById(`replyContents-${parentCommentId}`).value;
-            const boardId = [[${board.id}]];
-
-            // 백엔드에 대댓글 제출을 위한 AJAX 요청 보내기
-            $.ajax({
-                type: "post",
-                contentType: "application/json",
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader(header, token);
-                },
-                url: "/comment/saveReply/" + parentCommentId,
-                dataType: "JSON",
-                data: JSON.stringify({
-                   "commentWriter": writer,
-                   "commentContents": contents,
-                   "boardId": boardId
-                }),
-                success: function (res) {
-                    console.log("대댓글 제출 성공", res);
-
-                    let html = "";
-
-                    //for(let i=0; i < res.length; i++){
-                        html += "<div class='comment-reply-box' data-target='" + res + "'>";
-                        html += "   <div class='writer'>⤷ " + writer + "</div>";
-                        html += "   <div class='contents'>" + contents + "</div>";
-                        //html += "   <div class='reg-date'>" +  + "</div>";
-                        html += "</div>"
-                    //}
-
-                    $(".comment-reply-input").hide();
-                    $("#comment-list li .comment-box").after(html);
-
-                },
-                error: function (err) {
-                    console.error("대댓글 제출 실패", err);
-                }
-            });
-        }
-*/
-
     </script>
 </th:block>
 
 <div layout:fragment="content">
-
-    <h1>#오운완 상세 화면</h1>
+    <h2 class="content-title" th:text="${board.name} + '님의 운동일기'"></h2>
 
     <div class="table-container">
-        <table width="500" cellpadding="0" cellspacing="0" border="1" class="table">
-            <tbody class="table-group-divider">
-            <h2 th:text="${board.title}"></h2>
-            <p th:text="${board.name}"></p>
-
-            <p th:text="${board.content}"></p>
-            <div>
-                <img th:if="${not #strings.isEmpty(board.imgUrl)}"
-                     th:src="${board.imgUrl}" class="rounded mgb-15" width="800" height="auto">
-            </div>
-            </tbody>
-        </table>
+        <dl>
+            <dt><img th:if="${not #strings.isEmpty(board.imgUrl)}" th:src="${board.imgUrl}" /></dt>
+            <dd>
+                <p class="user" th:text="${board.name}" th:style="'background-image: url(/img/user.png)'"></p>
+                <h2 th:text="${board.title}"></h2>
+                <p th:text="${board.content}"></p>
+            </dd>
+        </dl>
     </div>
+
     <div class="edit-buttons"> <!-- 삭제버튼 , 수정버튼 위치 변경 idv-->
         <form th:action="@{'/board/delete?id=' + ${board.id}}" method="post" id="deleteForm">
 
@@ -525,8 +495,11 @@
         </form>
     </div> <!-- 삭제 수정 div 태그 닫기 -->
 
+    <div style="border:10px solid #F9FAFB;"></div>
+
     <!-- 댓글 작성 부분 -->
     <div id="comment-write">
+        <h3>댓글 <span id="comment-count">0</span></h3>
         <input type="text" id="commentWriter" placeholder="작성자">
         <input type="text" id="commentContents" placeholder="내용">
         <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
@@ -557,12 +530,12 @@
         </ul>
     </div>
 
-    <!--        <button onclick="showReplyForm(${comment.id})">답글</button>-->
-    <!--        <div id="replyForm-${comment.id}" style="display: none;">-->
-    <!--            <input type="text" id="replyWriter-${comment.id}" placeholder="작성자명">-->
-    <!--            <input type="text" id="replyContents-${comment.id}" placeholder="답글 내용">-->
-    <!--            <button onclick="submitReply(${comment.id})">답글 전송</button>-->
-    <!--        </div>-->
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
 
 </div>
 

@@ -3,28 +3,15 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <link crossorigin="anonymous"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-          rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<th:block layout:fragment="css">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
+            background-color: #fff;
             margin: 0;
             padding: 0;
         }
 
-
-
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        table {
+        table.feed-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
@@ -34,66 +21,42 @@
             border: 1px solid #ddd;
         }
 
-        th, td {
+        .feed-table th,
+        .feed-table td {
             padding: 10px;
+            vertical-align: middle;
+        }
+
+        .feed-table td.wirter1 {
             text-align: left;
         }
 
-
-            td input[type="text"][name="content"] {
-            width: 100%;
-            padding: 8px;
-            height: 300px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            text-align: left;
-
-
-
-        }
-
-        td input[type="text"][name="title"],
-        td input[type="password"][name="password"],
-        td input[type="password"][name="passwordConfirm"] {
+        .feed-table td input:not([type=submit]),
+        .feed-table td textarea {
             width: 50%;
             padding: 8px;
-            margin-bottom: 10px;
             box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
             text-align: left;
-            float: left;
         }
 
-        input[type="submit"] {
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+        .feed-table td input[type="file"] {
+            width: 100%;
         }
 
-        a {
-            text-decoration: none;
-            color: #333;
+        .list-btn {
             margin-left: 10px;
         }
+
     </style>
-    <title>게시판</title>
-</head>
-<th:block layout:fragment="script">
-    <script th:inline="javascript">
-        $(function(){
-            $('.nav-wrap, .content').addClass('sub');
-        });
-    </script>
 </th:block>
+
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         $(document).ready(function () {
+            $('.nav-wrap, .content').addClass('sub');
+
             $(".writeForm").submit(function (event) {
                 event.preventDefault();
 
@@ -126,11 +89,10 @@
     </script>
 </th:block>
 
-<body>
 <div layout:fragment="content">
-    <h2>게시판</h2>
+    <h2 class="content-title">운동 피드 작성</h2>
     <form action="/write" class="writeForm" enctype="multipart/form-data" method="post" th:object="${boardDto}">
-        <table border="1" cellpadding="0" cellspacing="0" class="table" width="500">
+        <table border="1" cellpadding="0" cellspacing="0" class="feed-table" width="500">
             <tr th:each="member : ${memberlist}">
                 <td>작성자</td>
                 <td class="wirter1" th:text="${member.name}"></td>
@@ -141,7 +103,7 @@
             </tr>
             <tr>
                 <td>내용</td>
-                <td><input cols="100" name="content"  size="200" type="text"></td>
+                <td><textarea rows="5" name="content" type="text"></textarea></td>
             </tr>
             <tr>
                 <td>이미지</td>
@@ -161,15 +123,19 @@
             </tr>
             <input name="id" type="hidden">
             <tr>
-                <td colspan="2">
-                    <input type="submit" value="입력">
-                    <a th:href="@{/list}">목록보기</a>
+                <td colspan="2" style="text-align:center;">
+                    <input type="submit" value="피드 작성 완료" class="btn-save">
+                    <a th:href="@{/board}" class="btn-other">목록보기</a>
                     <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">
                 </td>
             </tr>
         </table>
     </form>
 </div>
-<div class="footer" th:fragment="content"></div>
-</body>
+
+<br />
+<br />
+<br />
+<br />
+
 </html>
