@@ -6,13 +6,20 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(function(){
+            $('.nav-wrap, .content').addClass('sub');
+        });
+    </script>
+</th:block>
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
         .table img {
             max-width: 100%;
-            max-height: 400px; /* 이미지의 최대 높이를 설정합니다. 필요에 따라 조절 가능합니다. */
+            max-height: 400px;
             height: auto;
         }
 
@@ -44,6 +51,166 @@
         .reply {
             background-color: #e6e6e6;
             margin-left: 20px;
+        }
+
+            body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table img {
+            max-width: 100%;
+            max-height: 400px;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background-color: #EF4040;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #000;
+        }
+
+        #comment-write {
+            margin-top: 20px;
+        }
+
+        #comment-write input {
+            width: 150px;
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #comment-write-btn {
+            background-color: #28a745;
+        }
+
+        #comment-write-btn:hover {
+            background-color: #218838;
+        }
+
+        .comment-table {
+            margin-top: 20px;
+        }
+
+        .comment {
+            background-color: #f2f2f2;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 10px;
+        }
+
+        .comment-box {
+            margin-bottom: 10px;
+        }
+
+        .writer {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .contents {
+            margin-bottom: 5px;
+        }
+
+        .reg-date {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .reply-btn {
+            background-color: #17a2b8;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .reply-btn:hover {
+            background-color: #138496;
+        }
+
+        .comment-reply-input {
+            margin-top: 10px;
+        }
+
+        .comment-reply-input input {
+            width: 100px;
+            padding: 5px;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .comment-reply-btn {
+            background-color: #28a745;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .comment-reply-btn:hover {
+            background-color: #218838;
+        }
+
+        .comment-reply-box {
+            background-color: #e6e6e6;
+            border-radius: 8px;
+            padding: 10px;
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+        /* 수정 및 삭제 버튼 스타일 */
+        .edit-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .edit-buttons button {
+            margin-top: 10px;
         }
     </style>
 </th:block>
@@ -204,23 +371,7 @@
             });
         }
 
-        const listReq = () => {
-           console.log("목록 요청");
-           const page = [[${page}]];
-           location.href = "/board/paging?page="+page;
-        }
 
-        const updateReq = () => {
-           console.log("수정 요청");
-           const id = [[${board.id}]];
-           location.href = "/board/update/" + id;
-        }
-
-        const deleteReq = () => {
-           console.log("삭제 요청");
-           const id = [[${board.id}]];
-           location.href = "/board/delete/" + id;
-        }
 
         $(document).on("click", ".reply-btn", function(){
             const _ths = $(this);
@@ -267,7 +418,7 @@
 
                     let html = "";
                     html += "<div class='comment-reply-box' data-parentTarget='" + dataTarget + "' data-target='" + res + "'>";
-                    html += "   <div class='writer'>⌊ " + writer + "</div>";
+                    html += "   <div class='writer'>⤷ " + writer + "</div>";
                     html += "   <div class='contents'>" + contents + "</div>";
                     //html += "   <div class='reg-date'>" +  + "</div>";
                     html += "</div>"
@@ -311,7 +462,7 @@
 
                     //for(let i=0; i < res.length; i++){
                         html += "<div class='comment-reply-box' data-target='" + res + "'>";
-                        html += "   <div class='writer'>⌊ " + writer + "</div>";
+                        html += "   <div class='writer'>⤷ " + writer + "</div>";
                         html += "   <div class='contents'>" + contents + "</div>";
                         //html += "   <div class='reg-date'>" +  + "</div>";
                         html += "</div>"
@@ -333,7 +484,7 @@
 
 <div layout:fragment="content">
 
-    <h1>게시판 상세 페이지</h1>
+    <h1>#오운완 상세 화면</h1>
 
     <div class="table-container">
         <table width="500" cellpadding="0" cellspacing="0" border="1" class="table">
@@ -349,29 +500,30 @@
             </tbody>
         </table>
     </div>
-    <p>
-    <form th:action="@{'/board/delete?id=' + ${board.id}}" method="post" id="deleteForm">
-        <button type="button" onclick="deletePasswordPopup()">삭제</button>
-        <div id="passwordPopup1" style="display: none;">
-            <label for="password">비밀번호 입력:</label>
-            <input type="password" id="password1">
-            <button type="button" onclick="deleteBoardAndProceed()">확인</button>
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-        </div>
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-    </form>
+    <div class="edit-buttons"> <!-- 삭제버튼 , 수정버튼 위치 변경 idv-->
+        <form th:action="@{'/board/delete?id=' + ${board.id}}" method="post" id="deleteForm">
 
-    <form th:action="@{'/board/update/' + ${board.id}}" method="get">
-        <button type="button" onclick="showPasswordPopup()">수정</button>
-
-        <div id="passwordPopup" style="display: none;">
-            <label for="password">비밀번호 입력:</label>
-            <input type="password" id="password">
-            <button type="button" onclick="checkPasswordAndProceed()">확인</button>
+            <button type="button" onclick="deletePasswordPopup()">삭제</button>
+            <div id="passwordPopup1" style="display: none;">
+                <label for="password">비밀번호 입력:</label>
+                <input type="password" id="password1">
+                <button type="button" onclick="deleteBoardAndProceed()">확인</button>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            </div>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-        </div>
-    </form>
-    </p>
+        </form>
+
+        <form th:action="@{'/board/update/' + ${board.id}}" method="get">
+            <button type="button" onclick="showPasswordPopup()">수정</button>
+
+            <div id="passwordPopup" style="display: none;">
+                <label for="password">비밀번호 입력:</label>
+                <input type="password" id="password">
+                <button type="button" onclick="checkPasswordAndProceed()">확인</button>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            </div>
+        </form>
+    </div> <!-- 삭제 수정 div 태그 닫기 -->
 
     <!-- 댓글 작성 부분 -->
     <div id="comment-write">
