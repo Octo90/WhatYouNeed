@@ -125,6 +125,7 @@
         <!-- 재고 유효성 문제시 출력 -->
         <p th:if="${#fields.hasErrors('stockNumber')}" th:errors="*{stockNumber}" class="fieldError">Incorrect data</p>
 
+        <br />
 
         <!-- 등록 :: S -->
         <div th:if="${#lists.isEmpty(itemFormDto.itemImgDtoList)}">
@@ -140,7 +141,7 @@
 
         <!-- 수정 :: S -->
         <div th:if="${not #lists.isEmpty(itemFormDto.itemImgDtoList)}">
-            <h5 class="img-title">상품이미지 <span>※ 총 5개까지 등록 가능합니다.</span></h5>
+            <h5 class="img-title">상품 이미지 <span>※ 총 5개까지 등록 가능합니다.</span></h5>
             <div class="form-group" th:each="itemImgDto, status: ${itemFormDto.itemImgDtoList}">
                 <div class="input-group mb-3">
                     <input type="file" class="form-control imgFile" name="itemImgFile">
@@ -151,10 +152,10 @@
         </div>
         <!-- 수정 :: E -->
 
-        <div class="input-group">
-            <div class="input-group-prepend me-2">
-                <span class="input-group-text">상품 상세 내용</span>
-            </div>
+        <br />
+
+        <div>
+            <h5 class="img-title">상품 상세 설명 <span>※ 상품 상세 페이지에 노출됩니다.</span></h5>
             <textarea class="form-control" aria-label="With textarea" th:field="*{itemDetail}"></textarea>
         </div>
         <!-- 상품 상세 유효성 문제시 출력 -->

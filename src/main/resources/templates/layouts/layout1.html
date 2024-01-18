@@ -31,9 +31,9 @@
 </body>
 
 <script>
-    // 헤더 스크롤 이벤트
     let scr = 110;
     $(window).scroll(function() {
+        // 헤더 스크롤 이벤트
         const scroll = getCurrentScroll();
         if (scroll >= scr) {
             $('.nav-wrap').addClass('fixed');
@@ -41,10 +41,22 @@
         else {
             $('.nav-wrap').removeClass('fixed');
         }
+
+        // 위로 올라가기 버튼
+        const chkWs = $(this).scrollTop();
+        if(chkWs > 100){
+            $('.rightMenuWrap').addClass('on');
+        }else{
+            $('.rightMenuWrap').removeClass('on');
+        }
     });
 
     function getCurrentScroll(){
         return window.pageYOffset || document.documentElement.scrollTop;
+    }
+
+    function topScroll(){
+        $("html,body").animate({scrollTop:0},300);
     }
 
 </script>

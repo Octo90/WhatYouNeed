@@ -32,6 +32,9 @@
             let repBigSlide = new Swiper(".repImg-big", {
                 //loop: true,
                 spaceBetween: 10,
+                pagination: {
+                    el: ".swiper-pagination",
+                },
                 thumbs: {
                     swiper: repSmallSlide,
                 },
@@ -135,10 +138,13 @@
             margin-top:30px;
         }
 
+        .d-flex {
+            justify-content: space-between;
+        }
+
         .repImgDiv {
             display:flex;
-            margin-right: 30px;
-            width: 60%;
+            width: 55%;
             height: 480px;
             overflow:hidden;
         }
@@ -157,10 +163,20 @@
         }
 
         .repImgDiv .repImg-big {
+            position: relative;
             overflow: hidden;
             width: calc(100% - 150px);
             margin-left: 8px;
             border: 1px solid #C7C8C9;
+        }
+
+        .repImgDiv .repImg-big .swiper-pagination-bullet-active {
+            background: #EF4040;
+        }
+
+        .repImgDiv .repImg-big .swiper-pagination-bullet {
+            width: 10px;
+            height: 10px;
         }
 
         .repImg {
@@ -288,6 +304,7 @@
                     <div class="swiper-slide" th:if="${not #strings.isEmpty(item.itemImgDtoList[3].imgUrl)}"><img th:src="${item.itemImgDtoList[3].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}"></div>
                     <div class="swiper-slide" th:if="${not #strings.isEmpty(item.itemImgDtoList[4].imgUrl)}"><img th:src="${item.itemImgDtoList[4].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}"></div>
                 </div>
+                <div class="swiper-pagination"></div>
             </div>
         </div>
         <div>
