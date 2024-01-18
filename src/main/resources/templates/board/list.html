@@ -21,28 +21,40 @@
 <body>
 <div layout:fragment="content">
     <h2 class="content-title">게시판</h2>
+    <a href="/writeForm" class="go-to-board1">글작성 ✏</a>
 
-    <table width="500" cellpadding="0" cellspacing="0" border="1" class="table">
-        <tbody class="table-group-divider">
-        <tr>
-            <th>번호</th>
-            <th>작성자</th>
-            <th>제목</th>
-            <th>작성일</th>
-        </tr>
 
-        <tr th:each="board : ${boardlist}">
-            <td th:text="${board.id}"></td>
-            <td th:text="${board.name}"></td>
-            <td><a th:href="@{/board/view(id=${board.id})}" th:text="${board.title}"></a></td>
-            <td th:text="${#temporals.format(board.regTime, 'yyyy-MM-dd')}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <section class="product-container">
+        <th:block th:each="board: ${boardlist}">
+            <div class="product-item">
+                <div class="product-inner">
+                    <a th:href="'/board/' + ${board.id}" class="text-dark">
+                        <div class="product-img-wrap">
 
-    <p>
-        <a th:href="@{/writeForm}">글작성</a>
-    </p>
+                                <a th:href="@{/board/view(id=${board.id})}">
+                                    <img th:if="${not #strings.isEmpty(board.imgUrl)}" th:src="${board.imgUrl}" height="400" alt="Image">
+                                    <br/>
+                                    <span th:text="${board.title}"></span>
+                                </a>
+
+                        </div>
+                        <div class="product-exp">
+                            <h5 class="product-title">[[${board.name}]]</h5>
+                            <p class="product-text">[[${board.content}]]</p>
+                            <h5 class="product-price">[[${#temporals.format(board.regTime, 'yyyy-MM-dd')}]]</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </th:block>
+    </section>
+
+
+
+
+
+
+
 </div>
 <div class="footer" th:fragment="content">
 </div>

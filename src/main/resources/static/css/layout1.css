@@ -321,8 +321,24 @@ ul {
     overflow: hidden;
     height: 43px;
 }
+.go-to-board1 {
+    display: block;
+    margin: 60px auto 0;
+    float : left;
+    width: 200px;
+    padding: 12px;
+    background-color: #EF4040;
+    color: #fff;
+    border-radius: 8px;
+    transition: .3s;
+}
 
-.page-container .feed-list-wrap .go-to-board {
+.go-to-board1:hover {
+    background-color: #000;
+}
+
+
+.go-to-board {
     display: block;
     margin: 60px auto 0;
     text-align: center;
@@ -334,7 +350,7 @@ ul {
     transition: .3s;
 }
 
-.page-container .feed-list-wrap .go-to-board:hover {
+.go-to-board:hover {
     background-color: #000;
 }
 
@@ -553,6 +569,7 @@ ul {
     display: grid;
     grid-template-columns: repeat(4,1fr);
     grid-gap: 54px 24px;
+    width: 100%;
 }
 
 .product-container .product-img-wrap {
