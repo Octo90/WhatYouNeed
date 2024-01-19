@@ -244,7 +244,6 @@
                 <td>상품정보</td>
                 <td>판매가</td>
                 <td>수량</td>
-                <td>배송비</td>
                 <td>합계</td>
                 <td>선택</td>
             </tr>
@@ -267,9 +266,6 @@
                     <input type="number" name="count" th:id="'count_' + ${cartItem.cartItemId}" th:value="${cartItem.count}" min="1" onchange="changeCount(this)">
                 </td>
                 <td>
-                    <span class="shipment-price" th:attr="data-shipment=${cartItem.price > 20000} ? '무료배송' : '2500'"></span>
-                </td>
-                <td>
                     <span th:id="'totalPrice_'+${cartItem.cartItemId}" name="totalPrice" th:text="${cartItem.price * cartItem.count} + '원'" data-th-text="${#numbers.formatInteger((cartItem.price * cartItem.count) , 3, 'COMMA') + '원'}"></span>
                 </td>
                 <td>
@@ -280,27 +276,19 @@
             </tr>
             </tbody>
         </table>
+
         <br />
-        <table class="table">
-            <thead>
-            <tr>
-                <td>총 상품 금액</td>
-                <td>총 배송비</td>
-                <td>결제 예정 금액</td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><span id="prodPrice">0원</span></td>
-                <td><span id="shipmentPrice">0원</span></td>
-                <td><span id="orderTotalPrice">0원</span></td>
-            </tr>
-            </tbody>
-        </table>
+        <br />
+
+        <div style="text-align:right;">
+            <span style="margin-right: 20px;color:#999;">결제 예정 금액</span>
+            <span style="font-size: 48px;font-weight: bold;" id="orderTotalPrice">0원</span>
+        </div>
+
 
         <div class="btn-groups">
-            <button type="button" class="btn all-order-btn" onclick="orders()">전체상품주문</button>
-            <button type="button" class="btn partial-order-btn" onclick="orders()">선택상품주문</button>
+            <button type="button" class="btn-save" onclick="orders()">전체상품주문</button>
+            <button type="button" class="btn-other" onclick="orders()">선택상품주문</button>
         </div>
     </div>
 </div>
