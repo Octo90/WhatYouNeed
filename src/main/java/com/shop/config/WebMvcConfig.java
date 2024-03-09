@@ -11,6 +11,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Value("${uploadPath}") // application.properties 설정한 uploadPath
     String uploadPath;
 
+
     //uploadPath = "C:/shop
     // images/item/xxx.jpg
     @Override

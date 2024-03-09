@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+</head>
+<th:block layout:fragment="css">
+  <style>
+    #chat-container {
+             position: absolute;
+             top: 80%;
+             left: 50%;
+             transform: translate(-50%, -50%);
+             text-align: center;
+         }
+*{
+  box-sizing:border-box;
+}
+body{
+  background-color:black;
+  font-family:Arial;
+}
+#container{
+  width:490px;
+  height:600px;
+  background:#eff3f7;
+  margin:0 auto;
+  font-size:0;
+  border-radius:5px;
+  overflow:hidden;
+}
+aside{
+  width:260px;
+  height:800px;
+  background-color:#3b3e49;
+  display:inline-block;
+  font-size:15px;
+  vertical-align:top;
+}
+main{
+  width:490px;
+  height:800px;
+  display:inline-block;
+  font-size:15px;
+  vertical-align:top;
+}
+
+aside header{
+  padding:30px 20px;
+}
+aside input{
+  width:100%;
+  height:50px;
+  line-height:50px;
+  padding:0 50px 0 20px;
+  background-color:#5e616a;
+  border:none;
+  border-radius:3px;
+  color:#fff;
+  background-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_search.png);
+  background-repeat:no-repeat;
+  background-position:170px;
+  background-size:40px;
+}
+aside input::placeholder{
+  color:#fff;
+}
+aside ul{
+  padding-left:0;
+  margin:0;
+  list-style-type:none;
+  overflow-y:scroll;
+  height:690px;
+}
+aside li{
+  padding:10px 0;
+}
+aside li:hover{
+  background-color:#5e616a;
+}
+h2,h3{
+  margin:0;
+}
+aside li img{
+  border-radius:50%;
+  margin-left:20px;
+  margin-right:8px;
+}
+aside li div{
+  display:inline-block;
+  vertical-align:top;
+  margin-top:12px;
+}
+aside li h2{
+  font-size:14px;
+  color:#fff;
+  font-weight:normal;
+  margin-bottom:5px;
+}
+aside li h3{
+  font-size:12px;
+  color:#7e818a;
+  font-weight:normal;
+}
+
+.status{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  display:inline-block;
+  margin-right:7px;
+}
+.green{
+  background-color:#58b666;
+}
+.orange{
+  background-color:#ff725d;
+}
+.blue{
+  background-color:#6fbced;
+  margin-right:0;
+  margin-left:7px;
+}
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10000;
+}
+
+#container {
+  margin-top: 110px;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+.footer {
+  margin-top: 20px;
+}
+main {
+  margin-top: 20px;
+}
+main header{
+  height:110px;
+  padding:30px 20px 30px 40px;
+}
+main header > *{
+  display:inline-block;
+  vertical-align:top;
+}
+main header img:first-child{
+  border-radius:50%;
+}
+main header img:last-child{
+  width:24px;
+  margin-top:8px;
+}
+main header div{
+  margin-left:10px;
+  margin-right:145px;
+}
+main header h2{
+  font-size:16px;
+  margin-bottom:5px;
+}
+main header h3{
+  font-size:14px;
+  font-weight:normal;
+  color:#7e818a;
+}
+
+#chat{
+  padding-left:0;
+  margin:0;
+  list-style-type:none;
+  overflow-y:scroll;
+  height:535px;
+  border-top:2px solid #fff;
+  border-bottom:2px solid #fff;
+}
+#chat li{
+  padding:5px 30px;
+}
+#chat h2,#chat h3{
+  display:inline-block;
+  font-size:13px;
+  font-weight:normal;
+}
+#chat h3{
+  color:#bbb;
+}
+#chat .entete{
+  margin-bottom:5px;
+}
+#chat .message{
+  padding:10px;
+  color:#fff;
+  line-height:25px;
+  max-width:90%;
+  display:inline-block;
+  text-align:left;
+  border-radius:5px;
+}
+#chat .me{
+  text-align:right;
+}
+#chat .you .message{
+  background-color:gray;
+}
+#chat .me .message{
+  background-color:black;
+}
+#chat .triangle{
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 10px 10px 10px;
+}
+#chat .you .triangle{
+  border-color: transparent transparent #58b666 transparent;
+  margin-left:15px;
+}
+#chat .me .triangle{
+  border-color: transparent transparent #6fbced transparent;
+  margin-left:375px;
+}
+
+main footer{
+  height:155px;
+  padding:20px 30px 10px 20px;
+}
+main footer textarea{
+  resize:none;
+  border:none;
+  display:block;
+  width:100%;
+  height:80px;
+  border-radius:3px;
+  padding:20px;
+  font-size:13px;
+  margin-bottom:13px;
+}
+main footer textarea::placeholder{
+  color:#ddd;
+}
+main footer img{
+  height:30px;
+  cursor:pointer;
+}
+main footer a{
+  text-decoration:none;
+  text-transform:uppercase;
+  font-weight:bold;
+  color:#6fbced;
+  vertical-align:top;
+  margin-left:333px;
+  margin-top:5px;
+  display:inline-block;
+}
+
+    #opinion {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+
+ul {
+    margin-bottom: 20px;
+}
+  </style>
+</th:block>
+
+<th:block layout:fragment="script">
+
+  <script th:inline="javascript">
+       const username = [[${name}]];
+
+       const websocket = new WebSocket("ws://localhost:8080/ws/chat");
+       websocket.onmessage = onMessage;
+       websocket.onopen = onOpen;
+       websocket.onclose = onClose;
+
+       let isSeeing = true;
+       document.addEventListener("visibilitychange", function() {
+           console.log(document.visibilityState);
+           if(document.visibilityState == "hidden"){
+               isSeeing = false;
+           }else{
+               isSeeing = true;
+           }
+       });
+
+       var newExcitingAlerts = (function () {
+           var oldTitle = document.title;
+           var msg = "★문의사항이 도착하였습니다★";
+           var timeoutId;
+           var blink = function() { document.title = document.title == msg ? ' ' : msg;
+               if(isSeeing == true){
+                   clear();
+               }
+           };
+           var clear = function() {
+               clearInterval(timeoutId);
+               document.title = oldTitle;
+               window.onmousemove = null;
+               timeoutId = null;
+           };
+           return function () {
+               if (!timeoutId) {
+                   timeoutId = setInterval(blink, 1000);
+               }
+           };
+         }());
+
+       function isChattingAllowed() {
+          const date = new Date();
+          const hour = date.getHours();
+
+
+          const chatStartTime = 9;
+          const chatEndTime = 17;
+
+          return hour >= chatStartTime && hour < chatEndTime;
+      }
+
+
+       setInterval(() => console.log(new Date()), 10000);
+
+       $(document).ready(function(){
+           $(".floating-chat").click();
+
+           $("#disconn").on("click", (e) => {
+               disconnect();
+           })
+
+           $("#button-send").on("click", (e) => {
+               send();
+           });
+       })
+
+       function enterkey(){
+           if (window.event.keyCode == 13) {
+               send();
+           }
+       }
+       var lastSystemMessage = "";
+        function send() {
+    if (isChattingAllowed()) {
+        console.log(username + ":" + $("#opinion").val());
+        if ($("#opinion").val() !== "") {
+            websocket.send(username + ":" + $("#opinion").val());
+            $("#opinion").val('');
+        }
+    } else {
+       var systemMessage = "현재 시간엔 채팅이 불가능합니다.<br>채팅 가능시간 : 오전 09:00 ~ 오후 17:00<br>문의 사항을 통해 접수 해주시기 바랍니다.";
+
+
+            if (systemMessage !== lastSystemMessage) {
+                displaySystemMessage(systemMessage);
+                lastSystemMessage = systemMessage;
+                 $("#opinion").val('');
+            }
+        }
+    }
+
+    function displaySystemMessage(message) {
+    const date = new Date();
+    let hour = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
+    let min = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+    let amOrPm = hour >= 12 ? "PM" : "AM";
+    let currentTime = hour + ":" + min + " " + amOrPm;
+
+    let systemMessageHtml = "<li class='system-message'>" +
+        "<div class='entete'>" +
+        "<h3>" + currentTime + "</h3>" +
+        "</div>" +
+        "<div class='message' style='color: black;'>" +
+        message +
+        "</div></li>";
+
+        $("#chat").append(systemMessageHtml);
+        document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+    }
+       function onClose(evt) {
+           var str = username + ": 님이 방을 나가셨습니다.";
+           websocket.send(str);
+       }
+
+       function onOpen(evt) {
+           var str = username + ": 님이 입장하셨습니다.";
+           websocket.send(str);
+       }
+
+       let cachedTime;
+       let cachedSessionId;
+       function onMessage(msg) {
+           var data = msg.data;
+           var sessionId = null;
+           var message = null;
+           var arr = data.split(":");
+           const date = new Date();
+
+           for(var i=0; i<arr.length; i++){
+               console.log('arr[' + i + ']: ' + arr[i]);
+           }
+
+           var cur_session = username;
+
+           console.log("cur_session : " + cur_session);
+
+
+           sessionId = arr[0];
+           message = arr[1];
+
+           console.log("sessionID : " + sessionId);
+           console.log("cur_session : " + cur_session);
+
+
+           if(message == " 님이 입장하셨습니다."){
+               message = sessionId + "님이 입장하셨습니다.";
+           }
+           if(message == undefined){
+               message = "채팅이 종료되었습니다.";
+           }
+
+
+           let hour = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
+           let min = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+           let amOrPm;
+           if(hour >= 12){
+               amOrPm = "PM"
+           }else{
+               amOrPm = "AM"
+           }
+           let currentTime = hour + ":" + min + " " + amOrPm;
+
+           let userIdAndTimeHtml;
+           if(cachedSessionId != sessionId || cachedTime != currentTime){
+               userIdAndTimeHtml = "<div class='entete'>\n<h3>" + currentTime + "</h3>\n<h2>" + sessionId + "</h2>\n</div>"
+           }else{
+               userIdAndTimeHtml = "";
+           }
+
+           if(sessionId == cur_session){
+               var str = "<li class='me'>" +
+                   userIdAndTimeHtml +
+                   "<div class='message'>";
+               str += message;
+               str += "</div></li>";
+               $("#chat").append(str);
+           }
+           else{
+               var str = "<li class='you'>" +
+                   userIdAndTimeHtml +
+                   "<div class='message'>";
+               str += message;
+               str += "</div></li>";
+               $("#chat").append(str);
+
+               if(isSeeing == false){
+                   newExcitingAlerts();
+               }
+           }
+
+           cachedSessionId = sessionId;
+           cachedTime = currentTime;
+
+           document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+       }
+
+
+  </script>
+
+
+
+</th:block>
+
+<div layout:fragment="content">
+<div id="container">
+  <main>
+    <ul id="chat">
+    </ul>
+    <footer>
+
+      <input id="opinion" type="text" onkeyup="enterkey()" style="width: 100%;height: 25px;">
+    </footer>
+  </main>
+</div>
+</div>
+
+
+
+</html>

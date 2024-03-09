@@ -50,7 +50,6 @@ public class BoardController {
     @GetMapping(value = "/board/view")
     public String boardview(@RequestParam Long id, Model model) {
         model.addAttribute("board", boardService.viewboard(id));
-
         return "board/view";
     }
 

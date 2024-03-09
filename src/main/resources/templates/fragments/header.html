@@ -17,6 +17,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/board" style="color: #EF4040;font-weight: bold;">#오운완</a>
                     </li>
+                    <li>
+                        <a th:href="@{/guest}" >상담원 채팅</a>
+                    </li>
                 </ul>
             </div>
 
@@ -27,6 +30,9 @@
 
             <div class="rgt">
                 <ul class="navbar-wrap">
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                        <a class="nav-link" th:href="@{/master}">상담 시작!</a>
+                    </li>
                     <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                         <a class="nav-link" href="/admin/item/new">상품 등록</a>
                     </li>
@@ -47,7 +53,6 @@
                     </li>
                 </ul>
             </div>
-
         </div>
     </nav>
 </div>
