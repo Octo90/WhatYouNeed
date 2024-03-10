@@ -2,7 +2,6 @@ package com.shop.controller;
 
 import com.shop.dto.OrderDto;
 import com.shop.dto.OrderHistDto;
-import com.shop.service.HttpService;
 import com.shop.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
-    private final HttpService httpService;
 
     @PostMapping(value = "/order")
     public @ResponseBody
@@ -45,7 +43,7 @@ public class OrderController {
         }
         // 로그인 정보 -> Spring Security
         // principal.getName() (현재 로그인된 정보)
-        String email = httpService.principalEmail(principal);
+        String email = principal.getName();
         Long orderId;
         try {
             orderId = orderService.order(orderDto,email);
@@ -59,12 +57,11 @@ public class OrderController {
     public String orderHist(@PathVariable("page") Optional<Integer> page, Principal principal, Model model){
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 5);
 
-        Page<OrderHistDto> orderHistDtoList = orderService.getOrderList(httpService.principalEmail(principal), pageable);
+        Page<OrderHistDto> orderHistDtoList = orderService.getOrderList(principal.getName(), pageable);
 
         model.addAttribute("orders", orderHistDtoList);
         model.addAttribute("page", pageable.getPageNumber());
         model.addAttribute("maxPage",5);
-
         return "/order/orderHist";
     }
 
