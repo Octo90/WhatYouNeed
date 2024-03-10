@@ -96,7 +96,6 @@
 
         .order-hist-box .order-status {
             display: flex;
-            align-items:center;
             border-bottom: 1px solid #000;
             padding-bottom: 12px;
         }
@@ -109,8 +108,7 @@
         }
 
         .order-hist-box .order-status .status-txt {
-            margin-left: 12px;
-            font-weight: bold;
+
         }
 
         .order-hist-box .order-status .ml-3 {
@@ -144,7 +142,7 @@
     <h2 class="content-title">구매 이력</h2>
     <div class="order-hist-box" th:each="order : ${orders.getContent()}">
         <div class="order-status">
-            <h4 th:text="${order.orderDate}"></h4><span class="status-txt">[주문]</span>
+            <h4 th:text="${order.orderDate}"></h4><span class="status-txt">주문</span>
             <div class="ml-3">
                 <th:block th:if="${order.orderStatus == T(com.shop.constant.OrderStatus).ORDER}">
                     <button type="button" class="btn-other" th:value="${order.orderId}"

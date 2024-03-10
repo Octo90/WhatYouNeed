@@ -58,7 +58,9 @@ public class Order extends BaseEntity{
         order.setOrderDate(LocalDateTime.now());
         return order;
     }
-
+    // 주문서에 있는 주문 아이템 리스트를 반복
+    // 주문 아이템마다 총 가격을 tatalPrice에 추가
+    // 결론 비싸다 -> 개발자 되야 한다. 괜찮다.(실력주의)
     public int getTotalPrice(){
         int totalPrice = 0;
         for(OrderItem orderItem : orderItems){
