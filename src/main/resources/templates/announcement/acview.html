@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<title>Feel nostalgic</title>
+<meta charset="UTF-8">
+
+<head>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="../../static/css/layout1.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+  <style>
+    .table img {
+        max-width: 100%;
+        max-height: 400px;
+        height: auto;
+    }
+
+    .table-container {
+        max-width: 800px;
+        overflow-x: auto;
+        margin-bottom: 15px;
+    }
+    .footer {
+        margin-top: 20px;
+
+    }
+
+ .btn-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 15px; /* 적절한 간격 조절 */
+    }
+
+.btn-other1 {
+    padding: 7px 14px;
+    width: auto;
+    border: 1px solid #999;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #000;
+}
+
+
+  </style>
+</head>
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    $(function(){
+                $('.nav-wrap, .content').addClass('sub');
+            });
+
+
+
+             $(document).ready(function () {
+            $('.carousel').carousel({
+                interval: 4000,
+                pause: "hover",
+                wrap: true,
+                keyboard : true
+            });
+        });
+
+
+
+  </script>
+</th:block>
+
+
+<body>
+<div layout:fragment="content" >
+  <h1 class="content-title">문의사항 상세 화면</h1>
+  <div class="table-containerB">
+    <table width="500" cellpadding="0" cellspacing="0" border="1" class="table">
+      <tbody class="table-group-divider">
+      <h1>제목: <span th:text="${acboard.title}"></span></h1>
+      <p>작성자: <span th:text="${acboard.name}"></span></p>
+      <p>내용: <span th:text="${acboard.content}"></span></p>
+      <div>
+        <img th:if="${not #strings.isEmpty(acboard.imgUrl)}"
+             th:src="${acboard.imgUrl}" class="rounded mgb-15" width="800" height="auto">
+      </div>
+      </tbody>
+    </table>
+  </div>
+
+  <form action="/announcement/delete" method="post">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+    <input type="hidden" name="id" th:value="${acboard.id}"/>
+    <button type="submit" class="btn-other" >삭제</button>
+  </form>
+
+  <button class="btn-other" th:href="@{/announcement/acupdate/{id}(id = ${acboard.id})}">수정</button>
+</div>
+</body>
+</html>

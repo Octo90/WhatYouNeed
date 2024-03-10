@@ -680,7 +680,9 @@ ul {
 .footer {
     background-color: #EF4040;
     color: #fff;
+
 }
+
 
 .rightMenuWrap {position: fixed; right: 7%; bottom:-100%; width: 116px; z-index:998; transition: 0.3s ease;text-align:center;}
 .rightMenuWrap.on {bottom:10%;}
@@ -691,3 +693,4 @@ ul {
 @media(max-width:1400px){
    .rightMenuWrap {right:0;}
 }
+

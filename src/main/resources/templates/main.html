@@ -20,7 +20,7 @@
                 slidesPerView: 4,
                 spaceBetween: 30,
                 //centeredSlides: true,
-                loop: true,
+                loop: false,
                 autoplayDisableOnInteraction: false,
             });
 
@@ -28,7 +28,7 @@
                 slidesPerView: 5,
                 spaceBetween: 30,
                 centeredSlides: true,
-                loop: true,
+                loop: false,
                 autoplayDisableOnInteraction: false,
             });
         })
@@ -79,7 +79,7 @@
                 <h2 class="list-title">#오늘의 오운완</h2>
                 <div class="board-slide swiper-container">
                     <ul class="swiper-wrapper list">
-                        <th:block th:each="board: ${boardlist}">
+                        <th:block th:each="board, status: ${boardlist}">
                             <li class="swiper-slide list-item">
                                 <a th:href="@{'/board/view?id=' + ${board.id}}" class="text-dark">
                                     <div class="feed-img-wrap">
