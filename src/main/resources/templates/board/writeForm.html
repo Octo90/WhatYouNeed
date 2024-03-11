@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout1}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block layout:fragment="css">
+    <style>
+        body {
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        table.feed-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        .feed-table th,
+        .feed-table td {
+            padding: 10px;
+            vertical-align: middle;
+        }
+
+        .feed-table td.wirter1 {
+            text-align: left;
+        }
+
+        .feed-table td input:not([type=submit]),
+        .feed-table td textarea {
+            width: 50%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .feed-table td input[type="file"] {
+            width: 100%;
+        }
+
+        .list-btn {
+            margin-left: 10px;
+        }
+
+    </style>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            $('.nav-wrap, .content').addClass('sub');
+
+            $(".writeForm").submit(function (event) {
+                event.preventDefault();
+
+                var formData = new FormData($(this)[0]);
+
+                var password = formData.get("password");
+                var passwordConfirm = formData.get("passwordConfirm");
+
+                if (password !== passwordConfirm) {
+                    alert("비밀번호가 다릅니다.");
+                    return; // 폼 전송 중지
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "write",
+                    data: formData,
+                    processData: false,  // 데이터를 query string으로 변환하지 않음
+                    contentType: false,  // 데이터 형식을 설정하지 않음
+                    success: function (response) {
+                        alert("게시판 등록이 완료되었습니다");
+                        window.location.href = "board";
+                    },
+                    error: function (error) {
+                        console.error("게시판 등록 실패:", error);
+                    }
+                });
+            });
+        });
+    </script>
+</th:block>
+
+<div layout:fragment="content">
+    <h2 class="content-title">운동 피드 작성</h2>
+    <form action="/write" class="writeForm" enctype="multipart/form-data" method="post" th:object="${boardDto}">
+        <table border="1" cellpadding="0" cellspacing="0" class="feed-table" width="500">
+            <tr th:each="member : ${memberlist}">
+                <td>작성자</td>
+                <td class="wirter1" th:text="${member.name}"></td>
+            </tr>
+            <tr>
+                <td>제목</td>
+                <td><input name="title" size="50" type="text"></td>
+            </tr>
+            <tr>
+                <td>내용</td>
+                <td><textarea rows="5" name="content" type="text"></textarea></td>
+            </tr>
+            <tr>
+                <td>이미지</td>
+                <td>
+                    <div>
+                        <input class=" imageFile form-control" name="multipartFile" type="file">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>비밀번호 입력</td>
+                <td><input name="password" size="20" type="password"></td>
+            </tr>
+            <tr>
+                <td>비밀번호 확인</td>
+                <td><input name="passwordConfirm" size="20" type="password"></td>
+            </tr>
+            <input name="id" type="hidden">
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <input type="submit" value="피드 작성 완료" class="btn-save">
+                    <a th:href="@{/board}" class="btn-other">목록보기</a>
+                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<br />
+<br />
+<br />
+<br />
+
+</html>

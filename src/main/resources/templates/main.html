@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<th:block layout:fragment="css">
+    <style>
+
+    </style>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(function(){
+            let mainItemSlide = new Swiper('.recomm-slide.swiper-container', {
+                navigation: {
+                    nextEl: '.recomm-slide .swiper-button-next',
+                    prevEl: '.recomm-slide .swiper-button-prev',
+                },
+                slidesPerView: 4,
+                spaceBetween: 30,
+                //centeredSlides: true,
+                loop: false,
+                autoplayDisableOnInteraction: false,
+            });
+
+            let mainBoardSlide = new Swiper('.board-slide.swiper-container', {
+                slidesPerView: 5,
+                spaceBetween: 30,
+                centeredSlides: true,
+                loop: false,
+                autoplayDisableOnInteraction: false,
+            });
+        })
+    </script>
+</th:block>
+
+<div layout:fragment="content">
+    <div class="main-banner">
+        <div class="banner-wrap">
+            <img th:src="@{/img/bg.jpg}" alt="">
+            <div class="banner-text">
+                <h2>What You Need</h2>
+                <h2>당신이 원하는 헬스 용품의 모든 것</h2>
+                <a th:href="@{/list}" class="banner-link">상품 보러가기</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-cont" class="page-container" th:style="'background-image: url(/img/bg4.jpg)'">
+        <section class="product-list-wrap">
+            <div class="list-box">
+                <h2 class="list-title">추천 상품</h2>
+                <div class="recomm-slide swiper-container">
+                    <ul class="swiper-wrapper list">
+                        <th:block th:each="item, status: ${items}">
+                            <li class="swiper-slide list-item">
+                                <a th:href="'/item/' + ${item.id}" class="text-dark">
+                                    <div class="product-img-wrap">
+                                        <img th:src="${item.imgUrl}" th:alt="${item.itemNm}" height="400" />
+                                    </div>
+                                    <div class="product-exp">
+                                        <h5 class="product-title">[[${item.itemNm}]]</h5>
+                                        <p class="product-text">[[${item.itemDetail}]]</p>
+                                        <h5 class="product-price" data-th-text="${#numbers.formatInteger(item.price, 3, 'COMMA') + '원'}">[[${item.price}]]원</h5>
+                                    </div>
+                                </a>
+                            </li>
+                        </th:block>
+                    </ul>
+                    <div class="swiper-btn swiper-button-prev" th:style="'background-image: url(/img/slide-arrow.png)'"></div>
+                    <div class="swiper-btn swiper-button-next" th:style="'background-image: url(/img/slide-arrow.png)'"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="feed-list-wrap">
+            <div class="list-container">
+                <h2 class="list-title">#오늘의 오운완</h2>
+                <div class="board-slide swiper-container">
+                    <ul class="swiper-wrapper list">
+                        <th:block th:each="board, status: ${boardlist}">
+                            <li class="swiper-slide list-item">
+                                <a th:href="@{'/board/view?id=' + ${board.id}}" class="text-dark">
+                                    <div class="feed-img-wrap">
+                                        <img th:if="${not #strings.isEmpty(board.imgUrl)}"
+                                             th:src="${board.imgUrl}" class="rounded mgb-15" width="800" height="auto">
+                                    </div>
+                                    <div class="feed-exp-wrap">
+                                        <div class="exp-top">
+                                            <span class="writer-name" th:text="${board.name}"></span>
+
+                                            <span class="writer-reg-date" th:text="${#temporals.format(board.regTime, 'yyyy-MM-dd')}"></span>
+                                        </div>
+                                        <div class="exp-cont">
+                                            <p class="writer-content" th:text="${board.content}"></p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </th:block>
+                    </ul>
+                </div>
+
+                <a href="/board" class="go-to-board">지금 바로 쓰러가야지! 🏃‍♂️</a>
+            </div>
+        </section>
+    </div>
+</div>
+
+</html>

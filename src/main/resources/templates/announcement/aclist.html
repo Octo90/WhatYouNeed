@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/layout1}">
+<title>What you need</title>
+<meta charset="UTF-8">
+
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<th:block layout:fragment="css">
+    <style>
+    th {
+        text-align: center;
+    }
+
+    </style>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        $(function(){
+            $('.nav-wrap, .content').addClass('sub');
+        });
+
+        $(document).ready(function () {
+            $('.carousel').carousel({
+                interval: 4000,
+                pause: "hover",
+                wrap: true,
+                keyboard : true
+            });
+        });
+
+
+        function openNav() {
+          document.getElementById("mySidebar").style.width = "250px";
+          document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+          document.getElementById("mySidebar").style.width = "0";
+          document.getElementById("main").style.marginLeft= "0";
+        }
+    </script>
+</th:block>
+<body>
+<div layout:fragment="content">
+    <h2>문의사항</h2>
+
+    <table class="table">
+        <tbody class="table-group-divider">
+        <tr>
+            <th>번호</th>
+            <th>작성자</th>
+            <th>제목</th>
+            <th>작성일</th>
+        </tr>
+        <tr th:each="acboard : ${acboardlist}">
+            <td th:text="${acboard.id}"></td>
+            <td th:text="${acboard.name}"></td>
+            <td><a th:href="@{/announcement/acview(id=${acboard.id})}" th:text="${acboard.title}"></a></td>
+            <td th:text="${#temporals.format(acboard.regTime, 'yyyy-MM-dd')}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p>
+        <a th:href="@{/acwriteForm}" class="btn-save" style="text-decoration : none " >글작성</a>
+    </p>
+</div>
+
+
+</body>
+</html>

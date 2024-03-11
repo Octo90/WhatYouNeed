@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(function(){
+            $('.nav-wrap, .content').addClass('sub');
+        });
+    </script>
+</th:block>
+
+<th:block layout:fragment="css">
+    <style>
+        .feed-list-wrap ul {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            grid-gap: 44px 24px;
+            width: 100%;
+        }
+
+        .feed-list-wrap ul li {
+            border-radius: 12px;
+            box-shadow: rgba(0, 0, 0, 0.1) 4px 4px 20px;
+        }
+
+        .feed-list-wrap .feed-img-wrap img {
+            border-radius: 12px 12px 6px 6px;
+        }
+
+        .feed-list-wrap .feed-exp-wrap {
+            color: #000;
+        }
+    </style>
+</th:block>
+
+<div layout:fragment="content">
+    <h2 class="content-title">커뮤니티</h2>
+    <a href="/writeForm" class="go-to-board1">글작성&nbsp;&nbsp;✏</a>
+
+    <section class="feed-list-wrap">
+        <ul>
+            <th:block th:each="board: ${boardlist}">
+            <li class="list-item">
+                <a th:href="'/board/' + ${board.id}">
+                    <div class="feed-img-wrap">
+                        <a th:href="@{/board/view(id=${board.id})}">
+                            <img th:if="${not #strings.isEmpty(board.imgUrl)}" th:src="${board.imgUrl}" th:alt="${board.title}" >
+                            <span th:text="${board.title}" style="display:none;"></span>
+                        </a>
+                    </div>
+                    <div class="feed-exp-wrap">
+                        <div class="exp-top">
+                            <h5 class="writer-title">[[${board.title}]]</h5>
+                            <span class="writer-name">[[${board.name}]]</span>
+                            <span class="writer-reg-date">[[${#temporals.format(board.regTime, 'yyyy-MM-dd')}]]</span>
+                        </div>
+                        <div class="exp-cont">
+                            <p class="writer-content">[[${board.content}]]</p>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            </th:block>
+        </ul>
+    </section>
+
+    <br />
+    <br />
+    <br />
+
+</div>
+</html>
