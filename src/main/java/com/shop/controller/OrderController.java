@@ -2,6 +2,7 @@ package com.shop.controller;
 
 import com.shop.dto.OrderDto;
 import com.shop.dto.OrderHistDto;
+import com.shop.service.HttpService;
 import com.shop.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +25,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
+    private final HttpService httpService;
 
     @PostMapping(value = "/order")
     public @ResponseBody
     ResponseEntity order(@RequestBody @Valid OrderDto orderDto, BindingResult bindingResult,
                          Principal principal){
-        // String a = "abc" + "def"
-        // StringBuilder a;
-        // a.append("abc");
-        // a.append("def");
+
         if(bindingResult.hasErrors()){
             StringBuilder sb = new StringBuilder();
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -41,10 +40,10 @@ public class OrderController {
             }
             return new ResponseEntity<String>(sb.toString(), HttpStatus.BAD_REQUEST);
         }
-        // 로그인 정보 -> Spring Security
-        // principal.getName() (현재 로그인된 정보)
-        String email = principal.getName();
+
+        String email = httpService.principalEmail(principal);
         Long orderId;
+
         try {
             orderId = orderService.order(orderDto,email);
         }catch (Exception e){
@@ -57,7 +56,7 @@ public class OrderController {
     public String orderHist(@PathVariable("page") Optional<Integer> page, Principal principal, Model model){
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 5);
 
-        Page<OrderHistDto> orderHistDtoList = orderService.getOrderList(principal.getName(), pageable);
+        Page<OrderHistDto> orderHistDtoList = orderService.getOrderList(httpService.principalEmail(principal), pageable);
 
         model.addAttribute("orders", orderHistDtoList);
         model.addAttribute("page", pageable.getPageNumber());
@@ -67,7 +66,7 @@ public class OrderController {
 
     @PostMapping("/order/{orderId}/cancel")
     public @ResponseBody ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId, Principal principal){
-        if(!orderService.validateOrder(orderId, principal.getName())){
+        if(!orderService.validateOrder(orderId, httpService.principalEmail(principal))){
             return new ResponseEntity<String>("주문 취소 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
         orderService.cancelOrder(orderId);

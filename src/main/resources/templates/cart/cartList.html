@@ -8,8 +8,6 @@
 </head>
 
 <th:block layout:fragment="script">
-<<<<<<< HEAD
-=======
     <!-- 포트원 결제 -->
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
     <!-- jQuery -->
@@ -18,7 +16,6 @@
     <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
     <!-- 포트원 결제 -->
 
->>>>>>> develop
     <script th:inline="javascript">
         $(document).ready(function(){
             $("input[name=cartChkBox]").change(function(){
@@ -41,17 +38,7 @@
         }
 
         function changeCount(obj){
-<<<<<<< HEAD
             var count = obj.value;
-            var cartItemId = obj.id.split('_')[1];
-            var price = $("#price_"+cartItemId).data("price");
-            var totalPrice = (count * price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            $("#totalPrice_" + cartItemId).html(totalPrice+"원");
-            getOrderTotalPrice();
-            updateCartItemCount(cartItemId, count);
-        }
-=======
-           var count = obj.value;
             var cartItemId = obj.id.split('_')[1];
             var price = $("#price_" + cartItemId).data("price");
             var totalPrice = count * price;
@@ -61,7 +48,6 @@
             updateCartItemCount(cartItemId, count);
         }
 
->>>>>>> develop
         function checkAll(){
             if($("#checkall").prop("checked")){
                 $("input[name=cartChkBox]").prop("checked",true);
@@ -133,45 +119,6 @@
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
 
-<<<<<<< HEAD
-            var url = "/cart/orders";
-
-            var dataList = new Array();
-            var paramData = new Object();
-
-            $("input[name=cartChkBox]:checked").each(function(){
-                var cartItemId = $(this).val();
-                var data = new Object();
-                data["cartItemId"] = cartItemId;
-                dataList.push(data);
-            });
-
-            paramData['cartOrderDtoList'] = dataList;
-             var param = JSON.stringify(paramData);
-
-            $.ajax({
-                url : url,
-                type : "POST",
-                contentType : "application/json",
-                data : param,
-                beforeSend : function(xhr){
-                    /*데이터 전송하기 전에 헤더이 csrf 값을 설정*/
-                    xhr.setRequestHeader(header, token);
-                },
-                dataType : "json",
-                cache : false,
-                success : function(result, status){
-                    alert("주문이 완료 되었습니다.");
-                    location.href='/orders';
-                },
-                error : function(jqXHR, status, error){
-                    if(jqXHR.status == '401'){
-                        alert('로그인 후 이용해주세요.');
-                        location.href='/members/login';
-                    }else{
-                        alert(jqXHR.responseText);
-                    }
-=======
             let len = $("input[name=cartChkBox]:checked").length;
             if( len == 0 ) {
                 alert("주문 할 상품을 선택해주세요.")
@@ -243,7 +190,6 @@
                     var msg = "결제에 실패하였습니다.";
                     msg += "에러 내용 : " + rsp.error_msg;
                     alert(msg);
->>>>>>> develop
                 }
             });
         }

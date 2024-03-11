@@ -18,11 +18,7 @@
                         <a class="nav-link" href="/board" style="color: #EF4040;font-weight: bold;">#오운완</a>
                     </li>
                     <li>
-<<<<<<< HEAD
-                        <a th:href="@{/guest}" >상담원 채팅</a>
-=======
                         <a href="javascript:fnOpenChat('guest')">상담원 채팅</a>
->>>>>>> develop
                     </li>
                 </ul>
             </div>
@@ -35,11 +31,7 @@
             <div class="rgt">
                 <ul class="navbar-wrap">
                     <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-<<<<<<< HEAD
-                        <a class="nav-link" th:href="@{/master}">상담 시작!</a>
-=======
                         <a class="nav-link" href="javascript:fnOpenChat('master')">상담 시작!</a>
->>>>>>> develop
                     </li>
                     <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                         <a class="nav-link" href="/admin/item/new">상품 등록</a>
@@ -66,8 +58,6 @@
             </div>
         </div>
     </nav>
-<<<<<<< HEAD
-=======
 
     <div id="modal-cont">
         <div id="chat-box">
@@ -75,7 +65,6 @@
         </div>
     </div>
 
->>>>>>> develop
 </div>
 </html>
 
