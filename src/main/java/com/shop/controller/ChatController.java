@@ -8,20 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-<<<<<<< HEAD
-=======
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
->>>>>>> develop
-
 import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
-<<<<<<< HEAD
-=======
 @RequestMapping("/chat")
->>>>>>> develop
 public class ChatController {
 
     private final BoardService boardService;

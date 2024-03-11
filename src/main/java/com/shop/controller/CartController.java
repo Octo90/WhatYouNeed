@@ -47,10 +47,7 @@ public class CartController {
     public String orderHist(Principal principal, Model model){
         List<CartDetailDto> cartDetailList = cartService.getCartList(httpService.principalEmail(principal));
         model.addAttribute("cartItems", cartDetailList);
-<<<<<<< HEAD
-=======
         model.addAttribute("username", principal.getName());
->>>>>>> develop
         return "/cart/cartList";
     }
     @PatchMapping(value = "/cartItem/{cartItemId}")
@@ -58,7 +55,7 @@ public class CartController {
 
         if(count <= 0){
             return new ResponseEntity<String>("최소 1개 이상 담아주세요", HttpStatus.BAD_REQUEST);
-        } else if(!cartService.validateCartItem(cartItemId, principal.getName())){
+        } else if(!cartService.validateCartItem(cartItemId, httpService.principalEmail(principal))){
             return new ResponseEntity<String>("수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
@@ -68,11 +65,7 @@ public class CartController {
     @DeleteMapping(value = "/cartItem/{cartItemId}")
     public @ResponseBody ResponseEntity deleteCartItem(@PathVariable("cartItemId") Long cartItemId, Principal principal){
 
-<<<<<<< HEAD
-        if(!cartService.validateCartItem(cartItemId, principal.getName())){
-=======
         if(!cartService.validateCartItem(cartItemId, httpService.principalEmail(principal))){
->>>>>>> develop
             return new ResponseEntity<String>("수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
@@ -90,19 +83,11 @@ public class CartController {
             return new ResponseEntity<String>("주문할 상품을 선택해주세요.",HttpStatus.FORBIDDEN);
         }
         for(CartOrderDto cartOrder : cartOrderDtoList){
-<<<<<<< HEAD
-            if(!cartService.validateCartItem(cartOrder.getCartItemId(), principal.getName())){
-                return new ResponseEntity<String>("주문 권한이 없습니다.",HttpStatus.FORBIDDEN);
-            }
-        }
-        Long orderId = cartService.orderCartItem(cartOrderDtoList, principal.getName());
-=======
             if(!cartService.validateCartItem(cartOrder.getCartItemId(), httpService.principalEmail(principal))){
                 return new ResponseEntity<String>("주문 권한이 없습니다.",HttpStatus.FORBIDDEN);
             }
         }
         Long orderId = cartService.orderCartItem(cartOrderDtoList, httpService.principalEmail(principal));
->>>>>>> develop
 
         return new ResponseEntity<Long>(orderId,HttpStatus.OK);
     }

@@ -4,6 +4,7 @@ import com.shop.dto.ItemFormDto;
 import com.shop.dto.ItemSearchDto;
 import com.shop.dto.MainItemDto;
 import com.shop.entity.Item;
+import com.shop.repository.MemberRepository;
 import com.shop.service.ItemService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +29,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
+    private final MemberRepository memberRepository;
+
     @GetMapping(value = "/admin/item/new")
     public String itemForm(Model model){
         model.addAttribute("itemFormDto",new ItemFormDto());
@@ -100,9 +104,10 @@ public class ItemController {
     }
 
     @GetMapping(value = "/item/{itemId}")
-    public String itemDtl(Model model, @PathVariable("itemId")Long itemId){
+    public String itemDtl(Model model, @PathVariable("itemId")Long itemId, Principal principal){
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
         model.addAttribute("item",itemFormDto);
+        model.addAttribute("username", principal.getName());
         return "item/itemDtl";
     }
 
