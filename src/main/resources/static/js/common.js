@@ -1,6 +1,12 @@
 let isClicked = false;
 let websocket = null;
 
+function fnCloseChat() {
+    $("#chat-box").html('');
+    $("#chat-box").css({'display':'none'});
+    isClicked = false;
+}
+
 function fnOpenChat(id) {
     // 중복 클릭 방지
     if (isClicked) {
@@ -32,7 +38,7 @@ function fnOpenChat(id) {
             console.error("ajax 에러", error);
         },
         complete: function() {
-            isClicked = false;
+            isClicked = true;
         }
     });
 }
@@ -156,6 +162,7 @@ function displaySystemMessage(message) {
     $("#chat").append(systemMessageHtml);
     document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
 }
+
 function onClose(evt) {
     // WebSocket 객체 null로 설정
     websocket = null;
