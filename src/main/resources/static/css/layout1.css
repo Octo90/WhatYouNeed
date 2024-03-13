@@ -37,7 +37,7 @@ ul {
 /* 헤더 */
 #header {
     position: fixed;
-    top: 5;
+    top: 0;
     left: 0;
     width: 100%;
     z-index: 9999;
